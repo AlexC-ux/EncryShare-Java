@@ -2,31 +2,22 @@ package com.example.encrysharemob;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.IBinder;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.TaskStackBuilder;
-
-import java.util.concurrent.TimeUnit;
 
 public class msgService extends IntentService {
-    final String LOG_TAG = "myLogs";
-
     public static int pause;
     public static int activePause = 500;
     public static int passivePause = 3500;
-
     public static int noResponseToPassive = 30;
     public static int noResponseCounter = 0;
+    final String LOG_TAG = "myLogs";
     public msgService() {
         super("msgService");
 

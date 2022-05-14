@@ -1,16 +1,13 @@
 package com.example.encrysharemob;
 
 import android.app.ActivityManager;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ServiceInfo;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -23,16 +20,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
 
 import org.json.JSONArray;
@@ -46,29 +39,15 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.Charset;
-import java.time.Clock;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Random;
 
 public class loggedWindow extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "Chat channel";
     private static final int NOTIFY_ID = 101;
-
-    boolean needKey = false;
     public static Thread chatsThread;
-
     public static loggedWindow lw;
-
-
+    public static Chat[] Chats = new Chat[0];
+    boolean needKey = false;
     private Button shareBtn;
     private Button newChatBtn;
     private ImageButton menuBtn;
@@ -77,13 +56,17 @@ public class loggedWindow extends AppCompatActivity {
     private EditText newChatName;
     private TextView nameTextView;
     private TextView idTextView;
-
     private ClipboardManager clipboardManager;
     private ClipData clipData;
 
-
-    public static Chat[] Chats = new Chat[0];
-
+    public static int linearSearch(Chat[] array, Chat elementToSearch) {
+        for (int i = 0; i < array.length; i++) {
+            if (array[i].ChatId.equals(elementToSearch.ChatId)) {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     @Override
     protected void onPause(){
@@ -101,7 +84,6 @@ public class loggedWindow extends AppCompatActivity {
             chatsThread.start();
         }
     }
-
 
     @Override
     protected void onDestroy(){
@@ -211,6 +193,7 @@ public class loggedWindow extends AppCompatActivity {
             startService(msgService);
         }
     }
+
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -240,6 +223,48 @@ public class loggedWindow extends AppCompatActivity {
         chatsThread = new Thread(runnable);
         // Запускаем поток
         chatsThread.start();
+    }
+
+    public void MakeNotif(String title, String notifText){
+        String nid = title.split("#")[1];
+        int NOTIFICATION_ID = Integer.parseInt(nid);
+        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+        String CHANNEL_ID = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            CHANNEL_ID = title;
+            CharSequence name = "encryshare";
+            String Description = "encryshare messages";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
+            mChannel.setDescription(Description);
+            mChannel.enableLights(true);
+            mChannel.setLightColor(Color.RED);
+            mChannel.enableVibration(true);
+            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
+            mChannel.setShowBadge(false);
+            notificationManager.createNotificationChannel(mChannel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_encryshare_notif)
+                .setContentTitle(title)
+                .setContentText(notifText)
+                .setAutoCancel(true);
+
+
+        Intent resultChatIntent = new Intent(getApplicationContext(), loggedWindow.class);
+        Intent logw = new Intent(getApplicationContext(),loggedWindow.class);
+        resultChatIntent.putExtra("chat",title);
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
+        stackBuilder.addParentStack(loggedWindow.class);
+        stackBuilder.addNextIntent(resultChatIntent);
+
+
+        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_ONE_SHOT);
+
+
+        builder.setContentIntent(resultPendingIntent);
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
     private class GetUserData extends AsyncTask<String, String, String> {
@@ -402,15 +427,6 @@ public class loggedWindow extends AppCompatActivity {
         }
     }
 
-    public static int linearSearch(Chat[] array, Chat elementToSearch) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].ChatId.equals(elementToSearch.ChatId)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
     private class CreateChat extends AsyncTask<String, String, String> {
 
         HttpURLConnection connection = null;
@@ -458,49 +474,6 @@ public class loggedWindow extends AppCompatActivity {
 
             new GetUserChats().execute(loggedWindow.this.getString(R.string.apiUrl)+"getChats.php?api_key="+getSharedPreferences("main", MODE_PRIVATE).getString("api_key", ""));
         }
-    }
-
-
-    public void MakeNotif(String title, String notifText){
-        String nid = title.split("#")[1];
-        int NOTIFICATION_ID = Integer.parseInt(nid);
-        NotificationManager notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-        String CHANNEL_ID = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            CHANNEL_ID = title;
-            CharSequence name = "encryshare";
-            String Description = "encryshare messages";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-            mChannel.setDescription(Description);
-            mChannel.enableLights(true);
-            mChannel.setLightColor(Color.RED);
-            mChannel.enableVibration(true);
-            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-            mChannel.setShowBadge(false);
-            notificationManager.createNotificationChannel(mChannel);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.ic_encryshare_notif)
-                .setContentTitle(title)
-                .setContentText(notifText)
-                .setAutoCancel(true);
-
-
-        Intent resultChatIntent = new Intent(getApplicationContext(), loggedWindow.class);
-        Intent logw = new Intent(getApplicationContext(),loggedWindow.class);
-        resultChatIntent.putExtra("chat",title);
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-        stackBuilder.addParentStack(loggedWindow.class);
-        stackBuilder.addNextIntent(resultChatIntent);
-
-
-        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_ONE_SHOT);
-
-
-        builder.setContentIntent(resultPendingIntent);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
 }

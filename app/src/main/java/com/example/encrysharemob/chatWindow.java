@@ -1,9 +1,5 @@
 package com.example.encrysharemob;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.animation.TypeConverter;
 import android.app.NotificationManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -12,8 +8,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Debug;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
@@ -24,10 +18,12 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,19 +31,16 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.text.AttributedCharacterIterator;
-import java.time.LocalTime;
 
 public class chatWindow extends AppCompatActivity {
 
     public static final String floppy = "h@eKcOAn16DQ6JNw%1Waaij~LCrZJ|FyTj9FAqztnst|huOS7jNfU8p*WlDrILn~eJwQQ02Fj?PTnC6okPEC~34j@0{xX#VR6Miq~jIRdPxWE6?IH*ZYJoCKHMO8@S{IG~kB6F0R22nJ}9~ZbT7wj7nz~EPyoQ$Zvd0}wSSLzogbmJofVYv5%k}FvTt~lB#jDquvI5uNM$nirG{Cx1WojxJO*rMO4A*tWVV%6tctiD8#vNoJd@Yd0de69loQ%EG915#RKy%~SyL}o61VVWz8#IJHVwgXSryOXA5?6jwg@t";
     public static chatWindow lastOpenedChat;
-    private boolean scrolledToBottom = true;
-    public int exitAccep = 0;
     public static chatWindow activeChatWindow;
-    private TextView chatName;
+    public int exitAccep = 0;
     public ScrollView scrollChatMessages;
+    private boolean scrolledToBottom = true;
+    private TextView chatName;
     private LinearLayout chatMessages;
     private TextView newMsgTemplate;
     private ImageButton sendMsgBtn;
@@ -406,6 +399,116 @@ public class chatWindow extends AppCompatActivity {
         membersTh.start();
     }
 
+    public static class GetMessages extends AsyncTask<String, String, String> {
+
+
+        HttpURLConnection connection = null;
+        BufferedReader reader = null;
+        loggedWindow loggedWindow;
+        chatWindow chatWindow;
+        AppCompatActivity ap;
+
+        public GetMessages(AppCompatActivity ap) {
+            this.ap = ap;
+            if (ap.getClass()==chatWindow.class){
+                chatWindow = (com.example.encrysharemob.chatWindow) ap;
+            }else if (ap.getClass()==loggedWindow.class){
+                loggedWindow = (com.example.encrysharemob.loggedWindow) ap;
+            }
+        }
+
+
+        @Override
+        protected String doInBackground(String... strings) {
+            try {
+                //Обработка запроса
+                URL url = new URL(strings[0]);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.connect();
+
+                InputStream stream = connection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(stream));
+
+                StringBuffer stringBuffer = new StringBuffer();
+                String line = "";
+
+
+                while ((line = reader.readLine()) != null)
+                    stringBuffer.append(line).append("\n");
+                return stringBuffer.toString();
+            } catch (IOException e) {
+                //e.printStackTrace();
+            } finally {
+                if (connection != null)
+                    connection.disconnect();
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            return null;
+        }
+
+
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            //TODO сделать расшифровку строки result
+
+            try {
+                if (result!=null) {
+
+                if (result.contains("Error")) {
+                    msgService.noResponseCounter++;
+                } else {
+                    msgService.noResponseCounter = 0;
+                    JSONObject jsonObject = new JSONObject(result);
+                    if (jsonObject.getString("type").equals("text")) {
+                        JSONObject messageObject = new JSONObject(jsonObject.getString("data"));
+                        String chatId = messageObject.getString("chatId");
+                        String senderId = messageObject.getString("senderId");
+                        String senderName = messageObject.getString("senderName");
+                        String message = messageObject.getString("message");
+                        String key = ap.getSharedPreferences(chatId, MODE_PRIVATE).getString("password","");
+                        String vector = chatId + Integer.toString(Integer.parseInt(chatId) * Integer.parseInt(chatId) * 12) + chatId + floppy;
+
+                        //todo расшифровывается в null
+                        message = new customEncryptorAES(key, vector).decrypt(Uri.decode(message));
+                        message = Uri.decode(message);
+                        Chat actChat = null;
+                        for (int i = 0; i < com.example.encrysharemob.loggedWindow.Chats.length; i++) {
+                            if (com.example.encrysharemob.loggedWindow.Chats[i].ChatId.equals(chatId)) {
+                                actChat = com.example.encrysharemob.loggedWindow.Chats[i];
+                            }
+                        }
+
+                        if (actChat != null && loggedWindow != null) {
+                            if (Chat.activeChat.ChatId.equals(actChat.ChatId)) {
+                                new GetMessages(com.example.encrysharemob.chatWindow.activeChatWindow).onPostExecute(result);
+                            } else {
+                                actChat.UpdateMessages(loggedWindow, senderName, senderId, message);
+                            }
+
+                        } else if (actChat != null && chatWindow != null) {
+                            actChat.UpdateMessages(chatWindow, senderName, senderId, message);
+
+                        }
+                    }else if (jsonObject.getString("type").equals("pswd")){
+                        JSONObject jb = new JSONObject(jsonObject.getString("data"));
+                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().remove("password").commit();
+                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().putString("password",jb.getString("password")).commit();
+                    }
+                }
+            }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private class GetMembers extends AsyncTask<String, String, String> {
 
@@ -524,117 +627,6 @@ public class chatWindow extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-        }
-    }
-
-    public static class GetMessages extends AsyncTask<String, String, String> {
-
-
-        HttpURLConnection connection = null;
-        BufferedReader reader = null;
-        loggedWindow loggedWindow;
-        chatWindow chatWindow;
-        AppCompatActivity ap;
-
-        public GetMessages(AppCompatActivity ap) {
-            this.ap = ap;
-            if (ap.getClass()==chatWindow.class){
-                chatWindow = (com.example.encrysharemob.chatWindow) ap;
-            }else if (ap.getClass()==loggedWindow.class){
-                loggedWindow = (com.example.encrysharemob.loggedWindow) ap;
-            }
-        }
-
-
-        @Override
-        protected String doInBackground(String... strings) {
-            try {
-                //Обработка запроса
-                URL url = new URL(strings[0]);
-                connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
-                InputStream stream = connection.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(stream));
-
-                StringBuffer stringBuffer = new StringBuffer();
-                String line = "";
-
-
-                while ((line = reader.readLine()) != null)
-                    stringBuffer.append(line).append("\n");
-                return stringBuffer.toString();
-            } catch (IOException e) {
-                //e.printStackTrace();
-            } finally {
-                if (connection != null)
-                    connection.disconnect();
-                try {
-                    if (reader != null) {
-                        reader.close();
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            return null;
-        }
-
-
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            //TODO сделать расшифровку строки result
-
-            try {
-                if (result!=null) {
-
-                if (result.contains("Error")) {
-                    msgService.noResponseCounter++;
-                } else {
-                    msgService.noResponseCounter = 0;
-                    JSONObject jsonObject = new JSONObject(result);
-                    if (jsonObject.getString("type").equals("text")) {
-                        JSONObject messageObject = new JSONObject(jsonObject.getString("data"));
-                        String chatId = messageObject.getString("chatId");
-                        String senderId = messageObject.getString("senderId");
-                        String senderName = messageObject.getString("senderName");
-                        String message = messageObject.getString("message");
-                        String key = ap.getSharedPreferences(chatId, MODE_PRIVATE).getString("password","");
-                        String vector = chatId + Integer.toString(Integer.parseInt(chatId) * Integer.parseInt(chatId) * 12) + chatId + floppy;
-
-                        //todo расшифровывается в null
-                        message = new customEncryptorAES(key, vector).decrypt(Uri.decode(message));
-                        message = Uri.decode(message);
-                        Chat actChat = null;
-                        for (int i = 0; i < com.example.encrysharemob.loggedWindow.Chats.length; i++) {
-                            if (com.example.encrysharemob.loggedWindow.Chats[i].ChatId.equals(chatId)) {
-                                actChat = com.example.encrysharemob.loggedWindow.Chats[i];
-                            }
-                        }
-
-                        if (actChat != null && loggedWindow != null) {
-                            if (Chat.activeChat.ChatId.equals(actChat.ChatId)) {
-                                new GetMessages(com.example.encrysharemob.chatWindow.activeChatWindow).onPostExecute(result);
-                            } else {
-                                actChat.UpdateMessages(loggedWindow, senderName, senderId, message);
-                            }
-
-                        } else if (actChat != null && chatWindow != null) {
-                            actChat.UpdateMessages(chatWindow, senderName, senderId, message);
-
-                        }
-                    }else if (jsonObject.getString("type").equals("pswd")){
-                        JSONObject jb = new JSONObject(jsonObject.getString("data"));
-                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().remove("password").commit();
-                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().putString("password",jb.getString("password")).commit();
-                    }
-                }
-            }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
     }
 
