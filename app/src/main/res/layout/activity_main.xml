@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <EditText
+        android:maxLength="20"
+        android:id="@+id/name_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginHorizontal="50sp"
+        android:layout_marginTop="200sp"
+        android:ems="10"
+        android:hint="@string/nameHintRU"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:maxLength="20"
+        android:id="@+id/login_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginHorizontal="50sp"
+        android:layout_marginTop="280sp"
+        android:ems="10"
+        android:hint="@string/loginHintRU"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:maxLength="20"
+        android:id="@+id/password_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:ems="10"
+        android:layout_marginTop="360sp"
+        android:layout_marginHorizontal="50sp"
+        android:inputType="textPersonName"
+        android:hint="@string/passwordHintRU" />
+
+    <Button
+        android:id="@+id/regBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50sp"
+        android:layout_marginTop="440sp"
+        android:text="@string/regBtnRU" />
+
+
+
+</RelativeLayout>

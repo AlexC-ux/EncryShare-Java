@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <RelativeLayout
+        android:id="@+id/chatTemplate"
+        android:layout_width="match_parent"
+        android:layout_height="100sp"
+        android:layout_marginTop="10sp"
+        android:layout_marginHorizontal="5sp"
+        android:background="@drawable/chatbg"
+        android:visibility="visible">
+
+        <TextView
+            android:id="@+id/chatTemplate_name"
+            android:layout_width="match_parent"
+            android:layout_height="40sp"
+            android:layout_marginHorizontal="15sp"
+            android:layout_marginTop="20sp"
+            android:text="Name of the chat"
+            android:textSize="14pt" />
+
+        <TextView
+            android:id="@+id/chatTemplate_id"
+            android:layout_width="match_parent"
+            android:layout_height="30sp"
+            android:layout_marginHorizontal="15sp"
+            android:layout_marginTop="60sp"
+            android:text="Identifer of the chat"
+            android:textSize="10pt" />
+    </RelativeLayout>
+</RelativeLayout>

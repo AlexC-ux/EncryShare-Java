@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/bg_main_white_outline.xml" value="0.1" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/bg_scroll.xml" value="0.1" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/chatbg.xml" value="0.1205" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_encryshare_logo.xml" value="0.136" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_encryshare_logo_round.xml" value="0.1" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_encryshare_notif.xml" value="0.1" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_launcher_background.xml" value="0.16" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_chat_window.xml" value="0.152" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_logged_window.xml" value="0.2" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/bg_white_outline.xml" value="0.16636446056210336" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chat_message_template.xml" value="0.2" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chat_template.xml" value="0.2128205128205128" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chatbg.xml" value="0.20863616930312098" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
+  </component>
+</project>

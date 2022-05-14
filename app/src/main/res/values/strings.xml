@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">EncryShare</string>
+    <string name="apiUrl">http://otdelenietrois.online/api/</string>
+    <string name="loginHintRU">Введите логин…</string>
+    <string name="loginHintEN">Enter login…</string>
+    <string name="nameHintRU">Введите имя…</string>
+    <string name="nameHintEN">Enter name…</string>
+    <string name="passwordHintRU">Введите пароль…</string>
+    <string name="passwordHintEN">Enter password…</string>
+    <string name="regBtnRU">Зарегистрироваться</string>
+    <string name="regBtnEN">Sign UP</string>
+    <string name="wrongRegFieldsRU">Длинна имени/логина/пароля должна быть больше, чем 4 символа!</string>
+    <string name="wrongRegFieldsEN">Name/login/password must be longer than 4 characters!</string>
+    <string name="loadingRU">Загрузка…</string>
+    <string name="loadingEN">Loading…</string>
+    <string name="userid">id</string>
+    <string name="username">name</string>
+    <string name="arrowRight1">ᗒ</string>
+    <string name="arrowRight2">➤</string>
+    <string name="new_message">Введите текст…</string>
+    <string name="welcometext">Добро пожаловать,</string>
+    <string name="yourid">Ваш ID:</string>
+    <string name="pressidtocopy">(нажмите на ID чтобы скопировать)</string>
+    <string name="share">Поделиться</string>
+    <string name="createchat">Создать чат</string>
+    <string name="enterchatname">Введите название чата...</string>
+    <string name="menu">МЕНЮ</string>
+    <string name="chat_name">Chat name</string>
+    <string name="addmember">Добавить пользователя</string>
+    <string name="enterid">Введите ID...</string>
+    <string name="removemember">Удалить пользователя</string>
+    <string name="leavechat">Покинуть чат</string>
+    <string name="members">Пользователи</string>
+    <string name="copyingbypressingid">(по нажатию скопируется ID пользователя)</string>
+</resources>
