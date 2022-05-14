@@ -387,7 +387,7 @@ public class chatWindow extends AppCompatActivity {
                     new GetMembers(chatWindow.this).execute(chatWindow.this.getString(R.string.apiUrl) + "getChatInfo.php?api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", "") + "&chat_id=" + Chat.activeChat.ChatId);
                     synchronized(this) {
                         try {
-                            wait(1000);
+                            wait(2000);
                         } catch(InterruptedException ie){}
                     }
                 }

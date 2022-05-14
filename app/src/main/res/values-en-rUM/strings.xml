@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loginHintRU">Enter login…</string>
+    <string name="nameHintRU">Enter name…</string>
+    <string name="passwordHintRU">Enter password…</string>
+    <string name="regBtnRU">Register</string>
+    <string name="wrongRegFieldsRU">The length of the name/login/password must be longer than 4 characters!</string>
+    <string name="loadingRU">Loading…</string>
+    <string name="new_message">Enter text…</string>
+    <string name="welcometext">Hello,</string>
+    <string name="yourid">Your ID:</string>
+    <string name="pressidtocopy">(click on the ID to copy)</string>
+    <string name="share">Share</string>
+    <string name="createchat">Create chat</string>
+    <string name="enterchatname">Enter chat name…</string>
+    <string name="menu">MENU</string>
+    <string name="addmember">Add member</string>
+    <string name="enterid">Enter ID…</string>
+    <string name="removemember">Remove member</string>
+    <string name="leavechat">Leave chat</string>
+    <string name="members">Members</string>
+    <string name="copyingbypressingid">(ID will be copied by clicking on it)</string>
+    <string name="updateTitle">Update available!</string>
+    <string name="updateText">Click to go to the developer\'s website</string>
+</resources>

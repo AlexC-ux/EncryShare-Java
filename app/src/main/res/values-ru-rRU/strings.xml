@@ -1,17 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">EncryShare</string>
-    <string name="apiUrl" translatable="false">http://otdelenietrois.online/api/</string>
-    <string name="versionUrl" translatable="false">https://alexc-ux.github.io/EncryShareWebsite/</string>
-    <string name="devSiteUrl" translatable="false">https://alexc-ux.github.io/EncryShareWebsite/</string>
     <string name="loginHintRU">Введите логин…</string>
+    <string name="nameHintRU">Введите имя…</string>
     <string name="passwordHintRU">Введите пароль…</string>
     <string name="regBtnRU">Зарегистрироваться</string>
     <string name="wrongRegFieldsRU">Длинна имени/логина/пароля должна быть больше, чем 4 символа!</string>
     <string name="loadingRU">Загрузка…</string>
-    <string name="userid" translatable="false">id</string>
-    <string name="username" translatable="false">name</string>
-    <string name="arrowRight1" translatable="false">ᗒ</string>
-    <string name="arrowRight2" translatable="false">➤</string>
     <string name="new_message">Введите текст…</string>
     <string name="welcometext">Добро пожаловать,</string>
     <string name="yourid">Ваш ID:</string>
@@ -20,17 +14,12 @@
     <string name="createchat">Создать чат</string>
     <string name="enterchatname">Введите название чата…</string>
     <string name="menu">МЕНЮ</string>
-    <string name="chat_name" translatable="false">Chat name</string>
     <string name="addmember">Добавить пользователя</string>
     <string name="enterid">Введите ID…</string>
     <string name="removemember">Удалить пользователя</string>
     <string name="leavechat">Покинуть чат</string>
     <string name="members">Пользователи</string>
+    <string name="copyingbypressingid">(по нажатию скопируется ID пользователя)</string>
     <string name="updateTitle">Доступно обновление!</string>
     <string name="updateText">Нажмите для перехода на сайт разработчика</string>
-    <string name="nameHintRU">Введите имя…</string>
-    <string name="copyingbypressingid">(по нажатию скопируется ID пользователя)</string>
-    <string name="language" translatable="false">Language</string>
-    <string name="russian">Русский</string>
-    <string name="english">Английский</string>
 </resources>

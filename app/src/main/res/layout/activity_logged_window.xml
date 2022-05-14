@@ -44,7 +44,7 @@
                 android:choiceMode="none"
                 android:clickable="true"
                 android:focusable="true"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -99,6 +99,19 @@
                     android:textSize="16dp"
                     android:outlineProvider="background"
                     android:textColor="@color/white"/>
+
+                <Button
+                    android:id="@+id/langBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="40sp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginHorizontal="90sp"
+                    android:layout_marginTop="225sp"
+                    android:background="@drawable/chatbg"
+                    android:outlineProvider="background"
+                    android:text="@string/language"
+                    android:textColor="@color/white"
+                    android:textSize="16dp" />
 
                 <Button
                     android:id="@+id/newChat"

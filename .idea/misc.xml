@@ -10,6 +10,8 @@
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_encryshare_logo_round.xml" value="0.1" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_encryshare_notif.xml" value="0.1" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_launcher_background.xml" value="0.16" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/lang_menu.xml" value="0.2595" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/menubtnbg.xml" value="0.1" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_chat_window.xml" value="0.152" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_logged_window.xml" value="0.2" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_main.xml" value="0.2" />
@@ -17,6 +19,8 @@
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chat_message_template.xml" value="0.2" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chat_template.xml" value="0.2128205128205128" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chatbg.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/langs_menu.xml" value="0.20863616930312098" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/menu/langs.xml" value="0.20863616930312098" />
       </map>
     </option>
   </component>
