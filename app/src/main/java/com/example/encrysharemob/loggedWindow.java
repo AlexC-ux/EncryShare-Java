@@ -43,6 +43,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class loggedWindow extends AppCompatActivity {
 
@@ -113,6 +114,7 @@ public class loggedWindow extends AppCompatActivity {
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
         setContentView(R.layout.activity_logged_window);
+
 
         langBtn = findViewById(R.id.langBtn);
         langBtn.setOnClickListener(new View.OnClickListener() {

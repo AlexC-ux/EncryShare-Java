@@ -31,6 +31,9 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.Calendar;
+import java.util.Date;
 
 public class chatWindow extends AppCompatActivity {
 
@@ -263,10 +266,13 @@ public class chatWindow extends AppCompatActivity {
                         new GetMembers(chatWindow.this).execute(chatWindow.this.getString(R.string.apiUrl) + "getChatInfo.php?api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", "") + "&chat_id=" + Chat.activeChat.ChatId);
 
                         //создание строки сообщения
-                        String message = Uri.encode(messageText.getText().toString().trim());
+                        Calendar c = Calendar.getInstance();
+                        String message = Uri.encode("("+c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)  +"):"+messageText.getText().toString().trim());
                         String key = getSharedPreferences(Chat.activeChat.ChatId, MODE_PRIVATE).getString("password","");
                         String vector = Chat.activeChat.ChatId + Integer.toString(Integer.parseInt(Chat.activeChat.ChatId) * Integer.parseInt(Chat.activeChat.ChatId) * 12) + Chat.activeChat.ChatId + floppy;
                         customEncryptorAES encryptor = new customEncryptorAES(key,vector);
+
+
                         message = Uri.encode(encryptor.encrypt(message));
                         String data = new JSONObject()
                                 .put("senderName", getSharedPreferences("main", MODE_PRIVATE).getString("username", ""))
