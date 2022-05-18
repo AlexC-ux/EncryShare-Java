@@ -551,7 +551,7 @@ public class chatWindow extends AppCompatActivity {
                     stringBuffer.append(line).append("\n");
                 return stringBuffer.toString();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             } finally {
                 if (connection != null)
                     connection.disconnect();
