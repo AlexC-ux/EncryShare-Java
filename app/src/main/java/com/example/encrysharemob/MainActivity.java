@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,12 +44,13 @@ public class MainActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         String languageToLoad  = getSharedPreferences("lang", MODE_PRIVATE).getString("value","ru"); // your language
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
-        config.locale = locale;
+        config.setLocale(locale);
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
         mainPrefs = getSharedPreferences("main", MODE_PRIVATE);
@@ -57,8 +59,15 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), loggedWindow.class);
             startActivity(intent);
             finish();
+
         }
         else {
+
+            File sharedPreferenceFile = new File("/data/data/"+ getPackageName()+ "/shared_prefs/");
+            File[] listFiles = sharedPreferenceFile.listFiles();
+            for (File file : listFiles) {
+                file.delete();
+            }
             setContentView(R.layout.activity_main);
             name_field = findViewById(R.id.name_field);
             login_field = findViewById(R.id.login_field);

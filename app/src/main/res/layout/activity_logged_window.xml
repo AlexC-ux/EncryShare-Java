@@ -39,7 +39,7 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
                 android:layout_weight="0"
-                android:background="@color/bg_main"
+                android:background="@color/bg_menu1"
 
                 android:choiceMode="none"
                 android:clickable="true"

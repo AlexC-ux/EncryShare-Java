@@ -102,7 +102,7 @@ public class loggedWindow extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
         new CheckVersion().execute(getResources().getString(R.string.versionUrl));
     }
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,7 +110,7 @@ public class loggedWindow extends AppCompatActivity {
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
-        config.locale = locale;
+        config.setLocale(locale);
         getBaseContext().getResources().updateConfiguration(config,
                 getBaseContext().getResources().getDisplayMetrics());
         setContentView(R.layout.activity_logged_window);
@@ -243,7 +243,7 @@ public class loggedWindow extends AppCompatActivity {
         startActivity(intent);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     private void startGettingMessages() {
         //TODO получение сообщени
         if (!isMyServiceRunning(msgService.class)){
@@ -429,7 +429,7 @@ public class loggedWindow extends AppCompatActivity {
         }
 
 
-        @RequiresApi(api = Build.VERSION_CODES.N)
+
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);

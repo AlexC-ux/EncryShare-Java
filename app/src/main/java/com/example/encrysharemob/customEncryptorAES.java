@@ -6,6 +6,7 @@ import android.util.Base64;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
@@ -19,18 +20,17 @@ public class customEncryptorAES {
 
 
 
-    public static final String[] chars = new String[]{"а", "б", "в", "г", "д", "е", "ё", "ж", "з", "и", "й", "к", "л", "м", "н", "о", "п", "р", "с", "т", "у", "ф", "х", "ц", "ч", "ш", "щ", "ъ", "ы", "ь", "э", "ю", "я"}; //"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "A ", "B ", "C ", "D ", "E ", "F ", "G ", "H ", "I ", "J ", "K ", "L ", "M ", "N ", "O ", "P ", "Q ", "R ", "S ", "T ", "U ", "V ", "W ", "X ", "Y ", "Z", "1", "2", "3", "4", "5", "6", "7 ,8 ,9 ,0", "-", "+", "/", "*", " ", "#", "@", "!", "$", "%", "^", "&", "~", "`", "№", "'", "\"", ":", ";", "?", ".", ","};
-    public String key = "aesEncryptionKey";
-    public String initVector = "encryptionIntVec";
+    public static final String[] chars = new String[]{"А", "а", "Б", "б", "В", "в", "Г", "г", "Д", "д", "Е", "е", "Ё", "ё", "Ж", "ж", "З", "з", "И", "и", "Й", "й", "К", "к", "Л", "л", "М", "м", "Н", "н", "О", "о", "П", "п", "Р", "р", "С", "с", "Т", "т", "У", "у", "Ф", "ф", "Х", "х", "Ц", "ц", "Ч", "ч", "Ш", "ш", "Щ", "щ", "Ъ", "ъ", "Ы", "ы", "Ь", "ь", "Э", "э", "Ю", "ю", "Я", "я","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z","1","2","3","4","5","6","7","8","9","0", "-", "+", "/", "*", " ", "#", "@", "!", "$", "%", "^", "&", "~", "`", "№", "'", "\"", ":", ";", "?", ".", ","};
+    public byte[] key = new byte[32];
+    public byte[] initVector = new byte[16];
 
     public customEncryptorAES(@NonNull String key, @NonNull String initVector){
-        String skey = new String(key.getBytes(StandardCharsets.UTF_8),0,32);
-        this.key = skey;
-        String svec = new String(initVector.getBytes(StandardCharsets.UTF_8),0,16);
-        this.initVector = svec;
+            ByteBuffer bf = ByteBuffer.wrap(key.getBytes(StandardCharsets.UTF_8));
+            bf.get(this.key,0,32);
+            bf = ByteBuffer.wrap(initVector.getBytes(StandardCharsets.UTF_8));
+            bf.get(this.initVector,0,16);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public static String getRandomKey(){
         List<String> res = Arrays.asList(Arrays.stream(chars).toArray(String[]::new));
         Collections.shuffle(res);
@@ -40,7 +40,7 @@ public class customEncryptorAES {
         for (i=0; i<32;i++){
             sb.append(symbols[getRandomNumber(0,chars.length)]);
         }
-        return sb.toString();
+        return sb.substring(0,32);
     }
 
     public static int getRandomNumber(int min, int max) {
@@ -49,8 +49,8 @@ public class customEncryptorAES {
 
     public String encrypt(String value) {
         try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            IvParameterSpec iv = new IvParameterSpec(initVector);
+            SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
@@ -65,8 +65,9 @@ public class customEncryptorAES {
 
     public String decrypt(String encrypted) {
         try {
-            IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
-            SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
+            IvParameterSpec iv = new IvParameterSpec(initVector);
+            SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
+
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);

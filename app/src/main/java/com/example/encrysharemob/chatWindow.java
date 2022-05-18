@@ -185,7 +185,7 @@ public class chatWindow extends AppCompatActivity {
                     JSONObject passwordString = new JSONObject();
                     try {
                         passwordString.put("chat_id",Chat.activeChat.ChatId);
-                        passwordString.put("password",password);
+                        passwordString.put("password",Uri.encode(password));
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -267,7 +267,7 @@ public class chatWindow extends AppCompatActivity {
 
                         //создание строки сообщения
                         Calendar c = Calendar.getInstance();
-                        String message = Uri.encode("("+c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)  +"):"+messageText.getText().toString().trim());
+                        String message = Uri.encode("("+c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)  +") "+messageText.getText().toString().trim());
                         String key = getSharedPreferences(Chat.activeChat.ChatId, MODE_PRIVATE).getString("password","");
                         String vector = Chat.activeChat.ChatId + Integer.toString(Integer.parseInt(Chat.activeChat.ChatId) * Integer.parseInt(Chat.activeChat.ChatId) * 12) + Chat.activeChat.ChatId + floppy;
                         customEncryptorAES encryptor = new customEncryptorAES(key,vector);
@@ -322,7 +322,13 @@ public class chatWindow extends AppCompatActivity {
                     sb.append(msg[i]);
                     sb.append("\n");
                 }
-                String msgText = sb.toString();
+                msg = sb.toString().substring(0,sb.toString().length()-1).split("\\) ");
+                sb = new StringBuilder();
+                for (int i = 1;i<msg.length;i++){
+                    sb.append(msg[i]);
+                    sb.append(") ");
+                }
+                String msgText = sb.toString().substring(0,sb.toString().length()-2);
                 clipData = ClipData.newPlainText("text",msgText);
                 clipboardManager=(ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
                 clipboardManager.setPrimaryClip(clipData);
