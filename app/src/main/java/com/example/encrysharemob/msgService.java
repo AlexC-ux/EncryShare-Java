@@ -20,8 +20,6 @@ public class msgService extends IntentService {
     final String LOG_TAG = "myLogs";
     public msgService() {
         super("msgService");
-
-
     }
 
     public void onCreate() {
@@ -61,6 +59,7 @@ public class msgService extends IntentService {
                 .setContentText("обработки входящих сообщений")
                 .setSmallIcon(R.drawable.ic_encryshare_notif)
                 .setTicker("EncryShare");
+
         startForeground(112,b.build());
 
 
