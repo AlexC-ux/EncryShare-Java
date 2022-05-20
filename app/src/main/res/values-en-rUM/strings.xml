@@ -22,4 +22,5 @@
     <string name="copyingbypressingid">(ID will be copied by clicking on it)</string>
     <string name="updateTitle">Update available!</string>
     <string name="updateText">Click to go to the developer\'s website</string>
+    <string name="chats_loading">Updating the chat list...</string>
 </resources>

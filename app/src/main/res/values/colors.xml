@@ -11,7 +11,7 @@
     <color name="grey2">#DDDDDD</color>
     <color name="bg_chat">#afd4b9</color>
     <color name="bg_main">#b2cfad</color>
-    <color name="bg_menu1">#B8C6B6</color>
+    <color name="bg_menu1">#AFC8AB</color>
     <color name="bg_scroll">#afd2b9</color>
     <color name="bg_messages">#BBD1B7</color>
 </resources>

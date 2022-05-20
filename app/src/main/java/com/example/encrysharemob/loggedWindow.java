@@ -64,6 +64,7 @@ public class loggedWindow extends AppCompatActivity {
     private ClipboardManager clipboardManager;
     private ClipData clipData;
     private Button langBtn;
+    private TextView chats_preloader;
 
     public static int linearSearch(Chat[] array, Chat elementToSearch) {
         for (int i = 0; i < array.length; i++) {
@@ -116,6 +117,7 @@ public class loggedWindow extends AppCompatActivity {
         setContentView(R.layout.activity_logged_window);
 
 
+        chats_preloader = findViewById(R.id.chats_preloader);
         langBtn = findViewById(R.id.langBtn);
         langBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -460,6 +462,9 @@ public class loggedWindow extends AppCompatActivity {
                             }
                         });
                         chatsPanel.addView(view);
+                    }
+                    if (chats_preloader!=null){
+                        chats_preloader.setVisibility(View.GONE);
                     }
                     Chat newchat = null;
 

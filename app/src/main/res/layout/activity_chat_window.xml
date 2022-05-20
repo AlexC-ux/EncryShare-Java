@@ -63,11 +63,11 @@
         android:maxLength="1024"
         android:id="@+id/newMsgText"
         android:layout_width="match_parent"
-        android:layout_height="50sp"
+        android:layout_height="70sp"
         android:layout_marginStart="10sp"
-        android:layout_marginTop="10sp"
+        android:layout_marginTop="5sp"
         android:layout_marginEnd="10sp"
-        android:layout_marginBottom="10sp"
+        android:layout_marginBottom="0sp"
         android:layout_alignParentBottom="true"
         android:layout_weight="8"
         android:hint="@string/new_message"
@@ -78,12 +78,12 @@
     <ImageButton
         android:id="@+id/sendMsgBtn"
         android:layout_width="70sp"
-        android:layout_height="50sp"
+        android:layout_height="70sp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="10sp"
+        android:layout_margin="3sp"
         android:layout_weight="2"
-        android:background="@drawable/chatbg"/>
+        android:background="@drawable/ic_arrow2"/>
 </LinearLayout>
 
 

@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name" translatable="false">EncryShare</string>
+    <string name="chats_loading">Обновление списка чатов...</string>
     <string name="apiUrl" translatable="false">http://otdelenietrois.online/api/</string>
     <string name="versionUrl" translatable="false">https://alexc-ux.github.io/EncryShareWebsite/</string>
     <string name="devSiteUrl" translatable="false">https://alexc-ux.github.io/EncryShareWebsite/</string>
@@ -31,6 +32,6 @@
     <string name="nameHintRU">Введите имя…</string>
     <string name="copyingbypressingid">(по нажатию скопируется ID пользователя)</string>
     <string name="language" translatable="false">Language</string>
-    <string name="russian">Русский</string>
-    <string name="english">Английский</string>
+    <string name="russian" translatable="false">Русский</string>
+    <string name="english" translatable="false">Английский</string>
 </resources>

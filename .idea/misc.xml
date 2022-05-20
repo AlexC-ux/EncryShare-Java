@@ -6,14 +6,17 @@
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/bg_main_white_outline.xml" value="0.1" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/bg_scroll.xml" value="0.1" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/chatbg.xml" value="0.1205" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_arrow1.xml" value="0.136" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_arrow2.xml" value="0.109" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_buter.xml" value="0.264" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_encryshare_logo.xml" value="0.136" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_encryshare_logo_round.xml" value="0.1" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_encryshare_notif.xml" value="0.1" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/ic_launcher_background.xml" value="0.16" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/lang_menu.xml" value="0.2595" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/menubtnbg.xml" value="0.1" />
-        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_chat_window.xml" value="0.152" />
-        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_logged_window.xml" value="0.16585365853658537" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_chat_window.xml" value="0.264" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_logged_window.xml" value="0.176" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_main.xml" value="0.2" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/bg_white_outline.xml" value="0.16636446056210336" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chat_message_template.xml" value="0.2" />
@@ -33,7 +36,7 @@
   <component name="VisualizationToolProject">
     <option name="state">
       <ProjectState>
-        <option name="scale" value="0.1" />
+        <option name="scale" value="0.16585365853658537" />
       </ProjectState>
     </option>
   </component>
