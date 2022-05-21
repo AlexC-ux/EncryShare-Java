@@ -1,4 +1,4 @@
-package com.example.encrysharemob;
+package com.alexcux.encrysharemob;
 
 import android.app.NotificationManager;
 import android.content.ClipData;
@@ -423,9 +423,9 @@ public class chatWindow extends AppCompatActivity {
         public GetMessages(AppCompatActivity ap) {
             this.ap = ap;
             if (ap.getClass()==chatWindow.class){
-                chatWindow = (com.example.encrysharemob.chatWindow) ap;
+                chatWindow = (com.alexcux.encrysharemob.chatWindow) ap;
             }else if (ap.getClass()==loggedWindow.class){
-                loggedWindow = (com.example.encrysharemob.loggedWindow) ap;
+                loggedWindow = (com.alexcux.encrysharemob.loggedWindow) ap;
             }
         }
 
@@ -492,15 +492,15 @@ public class chatWindow extends AppCompatActivity {
                         message = new customEncryptorAES(key, vector).decrypt(Uri.decode(message));
                         message = Uri.decode(message);
                         Chat actChat = null;
-                        for (int i = 0; i < com.example.encrysharemob.loggedWindow.Chats.length; i++) {
-                            if (com.example.encrysharemob.loggedWindow.Chats[i].ChatId.equals(chatId)) {
-                                actChat = com.example.encrysharemob.loggedWindow.Chats[i];
+                        for (int i = 0; i < com.alexcux.encrysharemob.loggedWindow.Chats.length; i++) {
+                            if (com.alexcux.encrysharemob.loggedWindow.Chats[i].ChatId.equals(chatId)) {
+                                actChat = com.alexcux.encrysharemob.loggedWindow.Chats[i];
                             }
                         }
 
                         if (actChat != null && loggedWindow != null) {
                             if (Chat.activeChat.ChatId.equals(actChat.ChatId)) {
-                                new GetMessages(com.example.encrysharemob.chatWindow.activeChatWindow).onPostExecute(result);
+                                new GetMessages(com.alexcux.encrysharemob.chatWindow.activeChatWindow).onPostExecute(result);
                             } else {
                                 actChat.UpdateMessages(loggedWindow, senderName, senderId, message);
                             }

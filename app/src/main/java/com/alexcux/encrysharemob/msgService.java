@@ -1,4 +1,4 @@
-package com.example.encrysharemob;
+package com.alexcux.encrysharemob;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
@@ -14,7 +14,7 @@ import androidx.core.app.NotificationCompat;
 public class msgService extends IntentService {
     public static int pause;
     public static int activePause = 500;
-    public static int passivePause = 3500;
+    public static int passivePause = 4500;
     public static int noResponseToPassive = 30;
     public static int noResponseCounter = 0;
     final String LOG_TAG = "myLogs";

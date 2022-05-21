@@ -1,4 +1,4 @@
-package com.example.encrysharemob;
+package com.alexcux.encrysharemob;
 
 import android.content.Context;
 import android.content.Intent;

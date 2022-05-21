@@ -1,4 +1,4 @@
-package com.example.encrysharemob;
+package com.alexcux.encrysharemob;
 
 import android.os.Build;
 import android.util.Base64;
@@ -25,10 +25,18 @@ public class customEncryptorAES {
     public byte[] initVector = new byte[16];
 
     public customEncryptorAES(@NonNull String key, @NonNull String initVector){
-            ByteBuffer bf = ByteBuffer.wrap(key.getBytes(StandardCharsets.UTF_8));
-            bf.get(this.key,0,32);
-            bf = ByteBuffer.wrap(initVector.getBytes(StandardCharsets.UTF_8));
-            bf.get(this.initVector,0,16);
+            ByteBuffer bf = ByteBuffer.wrap(new byte[32]);
+            byte[] kbytes = key.getBytes(StandardCharsets.UTF_8);
+            for (int i = 0;i<32;i++){
+                bf.put(i, kbytes[i]);
+            }
+            this.key = bf.array();
+        bf = ByteBuffer.wrap(new byte[16]);
+        byte[] vbytes = initVector.getBytes(StandardCharsets.UTF_8);
+        for (int i = 0;i<16;i++){
+            bf.put(vbytes[i]);
+        }
+        this.initVector = bf.array();
     }
 
     public static String getRandomKey(){
@@ -37,7 +45,7 @@ public class customEncryptorAES {
         String[] symbols = (String[]) res.toArray();
         StringBuilder sb = new StringBuilder();
         int i = 0;
-        for (i=0; i<32;i++){
+        for (i=0; i<80;i++){
             sb.append(symbols[getRandomNumber(0,chars.length)]);
         }
         return sb.substring(0,32);
@@ -55,7 +63,7 @@ public class customEncryptorAES {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
-            byte[] encrypted = cipher.doFinal(value.getBytes());
+            byte[] encrypted = cipher.doFinal(cipher.doFinal(value.getBytes()));
             return Base64.encodeToString(encrypted,0);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -71,7 +79,7 @@ public class customEncryptorAES {
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-            byte[] original = cipher.doFinal(Base64.decode(encrypted,0));
+            byte[] original = cipher.doFinal(cipher.doFinal(Base64.decode(encrypted,0)));
 
             return new String(original);
         } catch (Exception ex) {

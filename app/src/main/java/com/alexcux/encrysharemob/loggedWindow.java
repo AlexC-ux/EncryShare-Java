@@ -1,4 +1,4 @@
-package com.example.encrysharemob;
+package com.alexcux.encrysharemob;
 
 import android.app.ActivityManager;
 import android.app.NotificationChannel;
@@ -42,6 +42,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.TimeZone;
 
@@ -468,24 +469,35 @@ public class loggedWindow extends AppCompatActivity {
                     }
                     Chat newchat = null;
 
-                    if (needKey){
-                    for (Chat c :
-                            Chats) {
-                        if (linearSearch(oldChats, c) < 0 && oldChats.length>0) {
-                            newchat = c;
-                            //todo закрепление пароля за чатом
+                    if (needKey==true){
+                        if (oldChats.length>0){
+                            for (int i=0;i<Chats.length;i++) {
+                                if (linearSearch(oldChats, Chats[i]) < 0) {
+                                    needKey = false;
+                                    newchat = Chats[i];
+                                    //todo закрепление пароля за чатом
+                                    String generatedString = customEncryptorAES.getRandomKey();
+                                    getSharedPreferences(newchat.ChatId, MODE_PRIVATE).edit().putString("password", generatedString).commit();
+                                    break;
+                                }
+                            }
+                        }else{
+                            if (Chats.length>0){
+                                needKey = false;
+                                //todo закрепление пароля за чатом
+                                String generatedString = customEncryptorAES.getRandomKey();
+                                getSharedPreferences(Chats[0].ChatId, MODE_PRIVATE).edit().putString("password",generatedString).commit();
+                            }
+                            }
 
-                            String generatedString = customEncryptorAES.getRandomKey();
-                            getSharedPreferences(newchat.ChatId, MODE_PRIVATE).edit().putString("password",generatedString).commit();
-                            needKey = false;
-                        }
+
                     }
                         }else{
                         String d = "";
                     }
 
 
-                    }
+
             } catch (JSONException e) {
                 //e.printStackTrace();
             }
@@ -537,7 +549,7 @@ public class loggedWindow extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            new GetUserChats().execute(loggedWindow.this.getString(R.string.apiUrl)+"getChats.php?api_key="+getSharedPreferences("main", MODE_PRIVATE).getString("api_key", ""));
+            //new GetUserChats().execute(loggedWindow.this.getString(R.string.apiUrl)+"getChats.php?api_key="+getSharedPreferences("main", MODE_PRIVATE).getString("api_key", ""));
         }
     }
 

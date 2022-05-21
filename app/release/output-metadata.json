@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.example.encrysharemob",
+  "applicationId": "com.alexcux.encrysharemob",
   "variantName": "release",
   "elements": [
     {
@@ -12,7 +12,7 @@
       "filters": [],
       "attributes": [],
       "versionCode": 2,
-      "versionName": "2.0.2.19",
+      "versionName": "2.0.2.20",
       "outputFile": "app-release.apk"
     }
   ],
