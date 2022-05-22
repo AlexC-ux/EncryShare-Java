@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,6 +14,7 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,6 +28,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Locale;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,10 +45,12 @@ public class MainActivity extends AppCompatActivity {
         finish();
         startActivity(intent);
     }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        new customEncryptorRSA.MakeReq().execute(this.getString(R.string.apiUrl)+"reg.php");
         String languageToLoad  = getSharedPreferences("lang", MODE_PRIVATE).getString("value","ru"); // your language
         Locale locale = new Locale(languageToLoad);
         Locale.setDefault(locale);

@@ -23,4 +23,6 @@
     <string name="updateTitle">Update available!</string>
     <string name="updateText">Click to go to the developer\'s website</string>
     <string name="chats_loading">Updating the chat list...</string>
+    <string name="copy">Copy</string>
+    <string name="reply">Reply</string>
 </resources>

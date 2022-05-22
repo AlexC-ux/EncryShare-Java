@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
 
@@ -415,7 +416,7 @@ public class loggedWindow extends AppCompatActivity {
                     stringBuffer.append(line).append("\n");
                 return stringBuffer.toString();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             } finally {
                 if (connection != null)
                     connection.disconnect();

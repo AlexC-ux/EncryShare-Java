@@ -2,11 +2,13 @@ package com.alexcux.encrysharemob;
 
 import android.annotation.SuppressLint;
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.renderscript.RenderScript;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -58,11 +60,13 @@ public class msgService extends IntentService {
                 .setContentTitle("Фоновый сервис")
                 .setContentText("обработки входящих сообщений")
                 .setSmallIcon(R.drawable.ic_encryshare_notif)
+                .setPriority(2)
                 .setTicker("EncryShare");
 
-        startForeground(112,b.build());
-
-
+        this.startForeground(112,b.build());
+        /*msgService msgService = this;
+        msgService.startForeground(112,b.build());
+        stopSelf();*/
 
 
                 while (true) {
@@ -85,6 +89,7 @@ public class msgService extends IntentService {
 
     public void onDestroy() {
         super.onDestroy();
+        stopForeground(true);
         //Log.d(LOG_TAG, "onDestroy");
     }
 }

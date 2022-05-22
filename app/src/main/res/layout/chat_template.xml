@@ -12,6 +12,7 @@
         android:visibility="visible">
 
         <TextView
+            android:textColor="@color/text"
             android:id="@+id/chatTemplate_name"
             android:layout_width="match_parent"
             android:layout_height="40sp"
@@ -21,6 +22,7 @@
             android:textSize="14pt" />
 
         <TextView
+            android:textColor="@color/text"
             android:id="@+id/chatTemplate_id"
             android:layout_width="match_parent"
             android:layout_height="30sp"

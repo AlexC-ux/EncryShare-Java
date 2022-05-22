@@ -34,4 +34,8 @@
     <string name="language" translatable="false">Language</string>
     <string name="russian" translatable="false">Русский</string>
     <string name="english" translatable="false">Английский</string>
+    <string name="copy">Скопировать</string>
+    <string name="reply">Ответить</string>
+    <string name="arrow_reply_down" translatable="false">⮩</string>
+    <string name="arrow_reply_up" translatable="false">⮪</string>
 </resources>

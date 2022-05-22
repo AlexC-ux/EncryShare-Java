@@ -23,4 +23,6 @@
     <string name="updateTitle">Доступно обновление!</string>
     <string name="updateText">Нажмите для перехода на сайт разработчика</string>
     <string name="chats_loading">Обновление списка чатов...</string>
+    <string name="copy">Скопировать</string>
+    <string name="reply">Ответить</string>
 </resources>

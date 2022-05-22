@@ -8,12 +8,14 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -183,6 +185,7 @@ public class chatWindow extends AppCompatActivity {
                         getSharedPreferences(Chat.activeChat.ChatId, MODE_PRIVATE).edit().putString("password",password).commit();
                     }
                     JSONObject passwordString = new JSONObject();
+                    customEncryptorRSA rsa = new customEncryptorRSA();
                     try {
                         passwordString.put("chat_id",Chat.activeChat.ChatId);
                         passwordString.put("password",Uri.encode(password));
@@ -190,7 +193,7 @@ public class chatWindow extends AppCompatActivity {
                         e.printStackTrace();
                     }
                     String pswdString = passwordString.toString();
-                    new MakeReq().execute(chatWindow.this.getString(R.string.apiUrl) + "sData.php?api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", "") + "&type=pswd&recepient=" + mid + "&data=" +pswdString);
+                    new MakeReq().execute(chatWindow.this.getString(R.string.apiUrl) + "sData.php?api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", "") + "&type=pswd&recepient=" + mid + "&data=" +Uri.encode(rsa.encrypt(pswdString)));
                     addMemberEditText.setText("");
                     addMemberEditText.setVisibility(View.GONE);
                 } else {
@@ -313,27 +316,50 @@ public class chatWindow extends AppCompatActivity {
         View newMessage = getLayoutInflater().inflate(R.layout.chat_message_template, null);
         TextView newMsg = newMessage.findViewById(R.id.msgTemplate);
         newMsg.setText(message);
-        newMsg.setOnClickListener(new View.OnClickListener() {
+        newMsg.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View view) {
-                String[] msg = message.split("\n");
-                StringBuilder sb = new StringBuilder();
-                for (int i = 1;i<msg.length;i++){
-                    sb.append(msg[i]);
-                    sb.append("\n");
-                }
-                msg = sb.toString().substring(0,sb.toString().length()-1).split("\\) ");
-                sb = new StringBuilder();
-                for (int i = 1;i<msg.length;i++){
-                    sb.append(msg[i]);
-                    sb.append(") ");
-                }
-                String msgText = sb.toString().substring(0,sb.toString().length()-2);
-                clipData = ClipData.newPlainText("text",msgText);
-                clipboardManager=(ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
-                clipboardManager.setPrimaryClip(clipData);
-                Toast.makeText(getApplicationContext(),"Текст сообщения скопирован!",Toast.LENGTH_SHORT).show();
-            }
+            public boolean onLongClick(View view) {
+                PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+                popupMenu.inflate(R.menu.message_onclick);
+
+                popupMenu
+                        .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                String[] msg = message.split("\n");
+                                StringBuilder sb = new StringBuilder();
+                                for (int i = 1;i<msg.length;i++){
+                                    sb.append(msg[i]);
+                                    sb.append("\n");
+                                }
+                                msg = sb.toString().substring(0,sb.toString().length()-1).split("\\) ");
+                                sb = new StringBuilder();
+                                for (int i = 1;i<msg.length;i++){
+                                    sb.append(msg[i]);
+                                    sb.append(") ");
+                                }
+                                String msgText = sb.toString().substring(0,sb.toString().length()-2);
+
+                                switch (item.getItemId()) {
+                                    case R.id.copychatbtn:
+                                        clipData = ClipData.newPlainText("text",msgText);
+                                        clipboardManager=(ClipboardManager)getSystemService(CLIPBOARD_SERVICE);
+                                        clipboardManager.setPrimaryClip(clipData);
+                                        Toast.makeText(getApplicationContext(),"Текст сообщения скопирован!",Toast.LENGTH_SHORT).show();
+                                        return true;
+                                    case R.id.replychatbtn:
+                                        messageText.requestFocus();
+                                        messageText.setText("|vvvvvvvvvvvvvvvvvvvvv|\n"+msgText+"\n|vvvvvvvvvvvvvvvvvvvvv|"+"\n\n");
+                                        messageText.requestFocus();
+                                        return true;
+                                    default:
+                                        return false;
+                                }
+
+                            }
+                        });
+                popupMenu.show();
+            return true;}
         });
         chatMessages.addView(newMessage);
         if (scrolledToBottom){
@@ -511,8 +537,8 @@ public class chatWindow extends AppCompatActivity {
                         }
                     }else if (jsonObject.getString("type").equals("pswd")){
                         JSONObject jb = new JSONObject(jsonObject.getString("data"));
-                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().remove("password").commit();
-                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().putString("password",jb.getString("password")).commit();
+                        String password = Uri.decode(jb.getString("password"));
+                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().putString("password",password).commit();
                     }
                 }
             }
