@@ -8,20 +8,57 @@
     tools:context=".chatWindow"
     android:background="@color/bg_main">
 
-
-    <Button
-        android:id="@+id/inchatMenuBtn"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50sp"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="5sp"
-        android:layout_marginTop="5sp"
-        android:layout_marginEnd="5sp"
-        android:layout_marginBottom="5sp"
-        android:background="@drawable/chatbg"
-        android:paddingBottom="3sp"
-        android:text="@string/menu"
-        android:textSize="10pt" />
+        android:layout_alignParentLeft="true"
+        android:background="@color/bg_main">
+
+        <ImageButton
+            android:id="@+id/exitBtn"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="5sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginEnd="5sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/exit"
+            android:contentDescription="@string/app_name"
+            android:foregroundGravity="center"
+            android:rotation="180"
+            android:visibility="visible" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="60sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginBottom="5sp"
+            android:text="@string/app_name"
+            android:textColor="@color/text"
+            android:textSize="30sp" />
+
+        <ImageButton
+            android:id="@+id/inchatMenuBtn"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="5sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginEnd="5sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/chat_settings"
+            android:contentDescription="@string/app_name"
+            android:foregroundGravity="center"
+            android:rotation="90"
+            android:visibility="visible" />
+    </RelativeLayout>
 
     <TextView
         android:textColor="@color/text"
@@ -42,7 +79,7 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_marginTop="90sp"
-        android:layout_marginBottom="80sp"
+        android:layout_marginBottom="80dp"
         android:background="@color/bg_messages">
 
         <LinearLayout
@@ -56,93 +93,97 @@
         </LinearLayout>
     </ScrollView>
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_alignParentBottom="true"
-    android:layout_height="80sp">
-
-    <EditText
-        android:id="@+id/newMsgText"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70sp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="10sp"
-        android:layout_marginTop="5sp"
-        android:layout_marginEnd="0sp"
-        android:layout_marginBottom="0sp"
-        android:layout_weight="3"
-        android:backgroundTint="@color/white"
-        android:hint="@string/new_message"
-        android:maxLength="1024"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white" />
+        android:layout_height="80sp"
+        android:layout_alignParentBottom="true">
 
-    <ImageButton
-        android:id="@+id/sendMsgBtn"
-        android:layout_width="50sp"
-        android:layout_height="50sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="23sp"
-        android:layout_weight="0.6"
-        android:background="@drawable/ic_arrow2"/>
-</LinearLayout>
+        <EditText
+            android:id="@+id/newMsgText"
+            android:layout_width="match_parent"
+            android:layout_height="70sp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="10sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginEnd="0sp"
+            android:layout_marginBottom="0sp"
+            android:layout_weight="3"
+            android:backgroundTint="@color/text"
+            android:hint="@string/new_message"
+            android:maxLength="1024"
+            android:textColor="@color/text"
+            android:textColorHint="@color/text" />
+
+        <ImageButton
+            android:id="@+id/sendMsgBtn"
+            android:layout_width="50sp"
+            android:layout_height="50sp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="23sp"
+            android:layout_weight="0.6"
+            android:background="@drawable/ic_arrow2" />
+    </LinearLayout>
 
 
     <LinearLayout
-        android:layout_marginHorizontal="8sp"
+        android:layout_marginHorizontal="0sp"
         android:id="@+id/chatMenuLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg_main"
         android:clickable="true"
+        android:layout_marginTop="50sp"
         android:orientation="vertical"
         android:visibility="gone"
         android:weightSum="100">
 
 
         <Button
+            android:layout_marginHorizontal="8sp"
             android:id="@+id/addMemberBtn"
             android:layout_width="match_parent"
             android:layout_height="60sp"
             android:layout_marginTop="100sp"
-
+            android:textColor="@color/text"
             android:background="@drawable/chatbg"
             android:text="@string/addmember" />
 
         <EditText
+            android:layout_marginHorizontal="8sp"
             android:id="@+id/addMemberEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/enterid"
             android:backgroundTint="@color/white"
-            android:textColor="@color/white"
-            android:textColorHighlight="@color/grey1"
-            android:textColorHint="@color/white"
-            android:textColorLink="@color/grey1"
+            android:textColor="@color/text"
+            android:textColorHint="@color/text"
             android:visibility="gone" />
 
         <Button
+            android:layout_marginHorizontal="8sp"
             android:id="@+id/removeMemberBtn"
             android:layout_width="match_parent"
             android:layout_height="60sp"
             android:layout_marginTop="15sp"
             android:background="@drawable/chatbg"
+            android:textColor="@color/text"
             android:text="@string/removemember" />
 
         <EditText
+            android:layout_marginHorizontal="8sp"
             android:id="@+id/removeMemberEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:textColor="@color/white"
-            android:textColorHighlight="@color/grey1"
-            android:textColorHint="@color/white"
-            android:textColorLink="@color/grey1"
+            android:textColor="@color/text"
+            android:textColorHint="@color/text"
             android:hint="@string/enterid"
             android:visibility="gone" />
 
         <Button
+            android:textColor="@color/text"
+            android:layout_marginHorizontal="8sp"
             android:id="@+id/exitChatBtn"
             android:layout_width="match_parent"
             android:layout_marginTop="15sp"
@@ -152,6 +193,7 @@
 
 
         <TextView
+            android:layout_marginHorizontal="8sp"
             android:textColor="@color/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -160,6 +202,7 @@
             android:textAlignment="center"
             android:textSize="18pt" />
         <TextView
+            android:layout_marginHorizontal="8sp"
             android:textColor="@color/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -169,6 +212,7 @@
             android:textSize="7pt" />
 
         <ScrollView
+            android:layout_marginHorizontal="8sp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="8"

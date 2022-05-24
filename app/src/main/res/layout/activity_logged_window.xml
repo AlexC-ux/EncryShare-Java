@@ -81,31 +81,8 @@
                     android:text="@string/pressidtocopy"
                     android:textAlignment="center"
                     android:textSize="9pt" />
-                <Button
-                    android:id="@+id/share"
-                    android:layout_marginHorizontal="90sp"
-                    android:layout_width="match_parent"
-                    android:layout_height="40sp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginTop="270sp"
-                    android:background="@drawable/chatbg"
-                    android:text="@string/share"
-                    android:textSize="16dp"
-                    android:outlineProvider="background"
-                    android:textColor="@color/white"/>
 
-                <Button
-                    android:id="@+id/langBtn"
-                    android:layout_width="match_parent"
-                    android:layout_height="40sp"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginHorizontal="90sp"
-                    android:layout_marginTop="225sp"
-                    android:background="@drawable/chatbg"
-                    android:outlineProvider="background"
-                    android:text="@string/language"
-                    android:textColor="@color/white"
-                    android:textSize="16dp" />
+
 
                 <Button
                     android:id="@+id/newChat"
@@ -117,7 +94,7 @@
                     android:background="@drawable/chatbg"
                     android:outlineProvider="background"
                     android:text="@string/createchat"
-                    android:textColor="@color/white"
+                    android:textColor="@color/text"
                     android:textSize="20dp" />
 
                 <EditText
@@ -129,9 +106,8 @@
                     android:layout_marginBottom="30sp"
                     android:backgroundTint="@color/white"
                     android:hint="@string/enterchatname"
-                    android:textColor="@color/white"
-                    android:textColorHighlight="@color/grey1"
-                    android:textColorHint="@color/white"
+                    android:textColor="@color/text"
+                    android:textColorHint="@color/text"
                     android:textColorLink="@color/grey1"
                     android:visibility="gone" />
 
@@ -154,14 +130,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="60sp"
                     android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/chats_preloader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/chats_loading"
                         android:layout_margin="5sp"
+                        android:text="@string/chats_loading"
                         android:textColor="@color/text"
-                        android:textSize="28sp"/>
+                        android:textSize="28sp" />
                 </LinearLayout>
 
             </ScrollView>
@@ -178,7 +155,6 @@
         android:background="@color/bg_main">
 
         <ImageButton
-
             android:id="@+id/menuBtn"
             android:layout_width="40sp"
             android:layout_height="40sp"
@@ -186,20 +162,54 @@
             android:layout_alignParentTop="true"
             android:layout_centerInParent="true"
             android:layout_margin="5sp"
-            android:background="@drawable/ic_buter_2pt"
+            android:background="@drawable/account"
             android:contentDescription="@string/app_name"
             android:foregroundGravity="center"
             android:visibility="visible" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="40sp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="60sp"
             android:layout_marginTop="5sp"
             android:layout_marginBottom="5sp"
-            android:layout_width="match_parent"
-            android:layout_height="40sp"
-            android:layout_marginLeft="60sp"
-            android:textColor="@color/text"
             android:text="@string/app_name"
+            android:textColor="@color/text"
             android:textSize="30sp" />
+
+        <ImageButton
+            android:id="@+id/settingsBtn"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="5sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginEnd="5sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/settings"
+            android:contentDescription="@string/app_name"
+            android:foregroundGravity="center"
+            android:rotation="90"
+            android:visibility="visible" />
+        <ImageButton
+            android:id="@+id/refreshBtn"
+            android:layout_width="40sp"
+            android:layout_height="40sp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="5sp"
+            android:layout_marginTop="5sp"
+            android:layout_marginEnd="45sp"
+            android:layout_marginBottom="5sp"
+            android:background="@drawable/refresh"
+            android:contentDescription="@string/app_name"
+            android:foregroundGravity="center"
+            android:rotation="90"
+            android:visibility="visible" />
     </RelativeLayout>
 
 </RelativeLayout>

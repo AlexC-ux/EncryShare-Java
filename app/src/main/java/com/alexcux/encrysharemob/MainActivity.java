@@ -50,6 +50,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        switch (getSharedPreferences("main", MODE_PRIVATE).getString("theme", "sys")){
+            case "sys":
+                AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+
+        }
+
         new customEncryptorRSA.MakeReq().execute(this.getString(R.string.apiUrl)+"reg.php");
         String languageToLoad  = getSharedPreferences("lang", MODE_PRIVATE).getString("value","ru"); // your language
         Locale locale = new Locale(languageToLoad);

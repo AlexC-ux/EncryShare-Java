@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -49,9 +52,10 @@ public class chatWindow extends AppCompatActivity {
     private LinearLayout chatMessages;
     private TextView newMsgTemplate;
     private ImageButton sendMsgBtn;
+    private ImageButton exitBtn;
     private EditText messageText;
     private LinearLayout chatMembersLayout;
-    private Button menubtn;
+    private ImageButton menubtn;
     private Button addMemberBtn;
     private Button removeMemberBtn;
     private Button exitChatBtn;
@@ -135,7 +139,13 @@ public class chatWindow extends AppCompatActivity {
         chatMembersLayout = findViewById(R.id.chatMembersLayout);
         messageText = findViewById(R.id.newMsgText);
         sendMsgBtn = findViewById(R.id.sendMsgBtn);
-
+        exitBtn = findViewById(R.id.exitBtn);
+        exitBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
         newMsgTemplate = findViewById(R.id.msgTemplate);
         chatName = findViewById(R.id.chat_name);
         chatName.setText(Chat.activeChat.ChatName+"#"+Chat.activeChat.ChatId);
@@ -156,6 +166,11 @@ public class chatWindow extends AppCompatActivity {
         menubtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                RotateAnimation ra = new RotateAnimation(0, 55, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+                ra.setDuration(100);
+                ra.setInterpolator(new LinearInterpolator());
+                ra.setRepeatCount(0);
+                menubtn.startAnimation(ra);
                 if (chatMenuLayout.getVisibility() == View.GONE) {
                     chatMenuLayout.setVisibility(View.VISIBLE);
                     exitAccep = 0;

@@ -14,8 +14,12 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -53,10 +57,12 @@ public class loggedWindow extends AppCompatActivity {
     private static final int NOTIFY_ID = 101;
     public static Thread chatsThread;
     public static loggedWindow lw;
+    public static Intent msgServiceObj;
     public static Chat[] Chats = new Chat[0];
     boolean needKey = false;
-    private Button shareBtn;
     private Button newChatBtn;
+    private ImageButton settingsBtn;
+    private ImageButton refreshBtn;
     private ImageButton menuBtn;
     private LinearLayout chatsPanel;
     private RelativeLayout menuPanel;
@@ -65,7 +71,6 @@ public class loggedWindow extends AppCompatActivity {
     private TextView idTextView;
     private ClipboardManager clipboardManager;
     private ClipData clipData;
-    private Button langBtn;
     private TextView chats_preloader;
 
     public static int linearSearch(Chat[] array, Chat elementToSearch) {
@@ -106,48 +111,141 @@ public class loggedWindow extends AppCompatActivity {
         new CheckVersion().execute(getResources().getString(R.string.versionUrl));
     }
 
+    private void reUpdateChats(){
+        Runnable chatsThUpdater = new Runnable() {
+            @Override
+            public void run() {
+                Looper.prepare();
+                chatsThread.interrupt();
+                while(!chatsThread.isInterrupted()){
+                    synchronized (this){
+                        try {
+                            wait(150);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                firstChatsUpd = false;
+                new CheckVersion().execute(getResources().getString(R.string.versionUrl));
+                startGettingChats();
+            }
+        };
+        new Thread(chatsThUpdater).start();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        String languageToLoad  = getSharedPreferences("lang", MODE_PRIVATE).getString("value",""); // your language
+        Locale myLocale = new Locale(languageToLoad);
+        Locale.setDefault(myLocale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.locale = myLocale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
         super.onCreate(savedInstanceState);
-        String languageToLoad  = getSharedPreferences("lang", MODE_PRIVATE).getString("value","ru"); // your language
-        Locale locale = new Locale(languageToLoad);
-        Locale.setDefault(locale);
-        Configuration config = new Configuration();
-        config.setLocale(locale);
-        getBaseContext().getResources().updateConfiguration(config,
-                getBaseContext().getResources().getDisplayMetrics());
+        switch (getSharedPreferences("main", MODE_PRIVATE).getString("theme", "sys")){
+            case "sys":
+                AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                break;
+            case "light":
+                AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_NO);
+                break;
+            case "dark":
+                AppCompatDelegate.setDefaultNightMode(
+                        AppCompatDelegate.MODE_NIGHT_YES);
+                break;
+
+        }
         setContentView(R.layout.activity_logged_window);
-
-
-        chats_preloader = findViewById(R.id.chats_preloader);
-        langBtn = findViewById(R.id.langBtn);
-        langBtn.setOnClickListener(new View.OnClickListener() {
+        refreshBtn = findViewById(R.id.refreshBtn);
+        refreshBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                stopService(msgServiceObj);
+                startService(msgServiceObj);
+                reUpdateChats();
+                Toast.makeText(getApplicationContext(),
+                        "Обновление..",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+        settingsBtn = findViewById(R.id.settingsBtn);
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
                 PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-                popupMenu.inflate(R.menu.langs);
+                popupMenu.inflate(R.menu.settings);
 
                 popupMenu
                         .setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(MenuItem item) {
                                 switch (item.getItemId()) {
-                                    case R.id.russian:
-                                        getSharedPreferences("lang", MODE_PRIVATE).edit().putString("value","ru").commit();
-                                        Toast.makeText(getApplicationContext(),
-                                                "Вы выбрали русский язык!",
-                                                Toast.LENGTH_SHORT).show();
-                                        updateLocale();
+                                    case R.id.langpopup:
+                                        PopupMenu LANGpopupMenu = new PopupMenu(getApplicationContext(), view);
+                                        LANGpopupMenu.inflate(R.menu.langs);
+                                        LANGpopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                            @Override
+                                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                                switch (menuItem.getItemId()){
+                                                    case R.id.russian:
+                                                        getSharedPreferences("lang", MODE_PRIVATE).edit().putString("value","ru").commit();
+                                                        Toast.makeText(getApplicationContext(),
+                                                                "Вы выбрали русский язык!",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        updateLocale();
+                                                        return true;
+                                                    case R.id.english:
+                                                        getSharedPreferences("lang", MODE_PRIVATE).edit().putString("value","en").commit();
+                                                        Toast.makeText(getApplicationContext(),
+                                                                "You have selected English!",
+                                                                Toast.LENGTH_SHORT).show();
+                                                        updateLocale();
+                                                        return true;
+                                                    default:
+                                                        return false;
+                                                }
+                                            }
+                                        });
+                                        LANGpopupMenu.show();
                                         return true;
-                                    case R.id.english:
-                                        getSharedPreferences("lang", MODE_PRIVATE).edit().putString("value","en").commit();
-                                        Toast.makeText(getApplicationContext(),
-                                                "You have selected English!",
-                                                Toast.LENGTH_SHORT).show();
-                                        updateLocale();
+                                    case R.id.sharepopup:
+                                        Intent sendIntent = new Intent();
+                                        sendIntent.setAction(Intent.ACTION_SEND);
+                                        sendIntent.putExtra(Intent.EXTRA_TEXT, "Я использую самый безопасный мессенджер EncryShare, скачивай с официального сайта:\nhttps://alexc-ux.github.io/EncryShareWebsite/\n\nДобавляй меня в чат, мой ID:\n"+getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
+                                        sendIntent.setType("text/plain");
+                                        startActivity(Intent.createChooser(sendIntent,"Поделиться"));
+                                        return true;
+                                    case R.id.themepopup:
+                                        PopupMenu THEMEpopupMenu = new PopupMenu(getApplicationContext(), view);
+                                        THEMEpopupMenu.inflate(R.menu.themes);
+                                        THEMEpopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                                            @Override
+                                            public boolean onMenuItemClick(MenuItem menuItem) {
+                                                switch (menuItem.getItemId()){
+                                                    case R.id.lighttheme:
+                                                        getSharedPreferences("main", MODE_PRIVATE).edit().putString("theme","light").commit();
+                                                        recreate();
+                                                        return true;
+                                                    case R.id.darktheme:
+                                                        getSharedPreferences("main", MODE_PRIVATE).edit().putString("theme","dark").commit();
+                                                        recreate();
+                                                        return true;
+                                                    case R.id.systemtheme:
+                                                        getSharedPreferences("main", MODE_PRIVATE).edit().putString("theme","sys").commit();
+                                                        recreate();
+                                                        return true;
+                                                    default:
+                                                        return false;
+                                                }
+                                            }
+                                        });
+                                        THEMEpopupMenu.show();
                                         return true;
                                     default:
-                                        return false;
+                                        return true;
                                 }
 
                             }
@@ -156,18 +254,11 @@ public class loggedWindow extends AppCompatActivity {
             }
         });
 
-        shareBtn = findViewById(R.id.share);
-        shareBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                String vls = "Я использую EncryShare - самый безопасный мессенджер, пользуйся и ты!\nhttps://alexc-ux.github.io/EncryShareWebsite\n\n\nДобавляй меня в чат:\n"+getSharedPreferences("main", MODE_PRIVATE).getString("userid", "");
-                sendIntent.putExtra(Intent.EXTRA_TEXT, vls);
-                sendIntent.setType("text/plain");
-                startActivity(Intent.createChooser(sendIntent,"Поделиться"));
-            }
-        });
+
+
+        chats_preloader = findViewById(R.id.chats_preloader);
+
+
         String chatNameI = getIntent().getStringExtra("chat");
         if (chatNameI != null) {
             Chat.activeChat = new Chat(chatNameI, chatNameI.split("#")[1], getSharedPreferences(chatNameI.split("#")[1], MODE_PRIVATE).getString("messages", ""));
@@ -241,19 +332,40 @@ public class loggedWindow extends AppCompatActivity {
         startGettingMessages();
     }
 
+    @Override
+    @SuppressWarnings("deprecation")
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        Locale locale = new Locale(getSharedPreferences("lang", MODE_PRIVATE).getString("value","ru"));
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.setLocale(locale);
+        getBaseContext().getResources().updateConfiguration(config, null);
+    }
+
+    @SuppressWarnings("deprecation")
     private void updateLocale() {
-        Intent intent = new Intent(getApplicationContext(),loggedWindow.class);
-        finish();
+        String languageToLoad  = getSharedPreferences("lang", MODE_PRIVATE).getString("value",""); // your language
+        Locale myLocale = new Locale(languageToLoad);
+        Locale.setDefault(myLocale);
+        android.content.res.Configuration config = new android.content.res.Configuration();
+        config.locale = myLocale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
+        Intent intent = new Intent(this, loggedWindow.class);
         startActivity(intent);
+        finish();
+        overridePendingTransition(0, 0);
     }
 
 
     private void startGettingMessages() {
         //TODO получение сообщени
         if (!isMyServiceRunning(msgService.class)){
-            Intent msgService = new Intent(this, msgService.class);
-            msgService.putExtras(this.getIntent());
-            startService(msgService);
+            msgServiceObj = new Intent(this, msgService.class);
+            msgServiceObj.putExtras(this.getIntent());
+            startService(msgServiceObj);
         }
     }
 
@@ -267,7 +379,15 @@ public class loggedWindow extends AppCompatActivity {
         return false;
     }
 
+    private static boolean firstChatsUpd = false;
     private void startGettingChats(){
+        if (! firstChatsUpd){
+            RotateAnimation ra = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+            ra.setDuration(1500);
+            ra.setInterpolator(new LinearInterpolator());
+            ra.setRepeatCount(9999);
+            refreshBtn.startAnimation(ra);
+        }
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -416,6 +536,7 @@ public class loggedWindow extends AppCompatActivity {
                     stringBuffer.append(line).append("\n");
                 return stringBuffer.toString();
             } catch (IOException e) {
+                reUpdateChats();
                 //e.printStackTrace();
             } finally {
                 if (connection != null)
@@ -494,10 +615,17 @@ public class loggedWindow extends AppCompatActivity {
 
                     }
                         }else{
-                        String d = "";
+                        reUpdateChats();
                     }
-
-
+                if (!firstChatsUpd) {
+                    firstChatsUpd = true;
+                    refreshBtn.startAnimation(new Animation() {
+                        @Override
+                        protected Animation clone() throws CloneNotSupportedException {
+                            return super.clone();
+                        }
+                    });
+                }
 
             } catch (JSONException e) {
                 //e.printStackTrace();

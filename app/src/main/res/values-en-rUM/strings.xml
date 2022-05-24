@@ -25,4 +25,8 @@
     <string name="chats_loading">Updating the chat list...</string>
     <string name="copy">Copy</string>
     <string name="reply">Reply</string>
+    <string name="theme">Theme</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="systemtheme">Follow system</string>
 </resources>

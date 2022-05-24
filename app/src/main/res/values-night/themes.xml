@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.EncryshareMob.main" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.EncryshareMob.main" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/bg_chat</item>
         <item name="colorPrimaryVariant">@color/bg_main</item>
