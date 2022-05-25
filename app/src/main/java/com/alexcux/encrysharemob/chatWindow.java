@@ -408,7 +408,7 @@ public class chatWindow extends AppCompatActivity {
                         }
                     });
                 } catch (JSONException e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }
@@ -592,7 +592,7 @@ public class chatWindow extends AppCompatActivity {
                     stringBuffer.append(line).append("\n");
                 return stringBuffer.toString();
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             } finally {
                 if (connection != null)
                     connection.disconnect();
@@ -629,7 +629,7 @@ public class chatWindow extends AppCompatActivity {
 
 
             } catch (JSONException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
 
 
@@ -739,7 +739,7 @@ public class chatWindow extends AppCompatActivity {
                     removeMemberBtn.setVisibility(View.GONE);
                 }
             } catch (JSONException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }

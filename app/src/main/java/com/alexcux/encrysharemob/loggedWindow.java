@@ -507,7 +507,7 @@ public class loggedWindow extends AppCompatActivity {
                 nameTextView.setText(getSharedPreferences("main", MODE_PRIVATE).getString("username", ""));
                 idTextView.setText("#" + getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
             } catch (JSONException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }
@@ -537,7 +537,7 @@ public class loggedWindow extends AppCompatActivity {
                 return stringBuffer.toString();
             } catch (IOException e) {
                 reUpdateChats();
-                //e.printStackTrace();
+                e.printStackTrace();
             } finally {
                 if (connection != null)
                     connection.disconnect();
@@ -546,7 +546,7 @@ public class loggedWindow extends AppCompatActivity {
                         reader.close();
                     }
                 } catch (IOException e) {
-                    //e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
 
@@ -562,6 +562,8 @@ public class loggedWindow extends AppCompatActivity {
             try {
                 if (result!=null){
                     Chat[] oldChats = Chats;
+                    Chat newchat = null;
+
                     //result = result.split("\\[")[1].split("\\]")[0];
                     JSONObject jsonObject = new JSONObject(result);
                     JSONArray e = jsonObject.getJSONArray("Chats");
@@ -571,26 +573,7 @@ public class loggedWindow extends AppCompatActivity {
                         JSONObject chatObject = new JSONObject(e.getString(i));
                         Chat newChat = new Chat(chatObject.getString("chat_name"), chatObject.getString("chat_id"), getSharedPreferences(chatObject.getString("chat_id"), MODE_PRIVATE).getString("messages",""));
                         Chats[i] = newChat;
-                        final View view = getLayoutInflater().inflate(R.layout.chat_template, null);
-                        RelativeLayout newChatLayout = view.findViewById(R.id.chatTemplate);
-                        TextView newChatName = view.findViewById(R.id.chatTemplate_name);
-                        newChatName.setText(chatObject.getString("chat_name"));
-                        TextView newChatId = view.findViewById(R.id.chatTemplate_id);
-                        newChatId.setText(chatObject.getString("chat_id"));
-
-                        newChatLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                newChat.Open(getApplicationContext(), loggedWindow.this);
-                            }
-                        });
-                        chatsPanel.addView(view);
                     }
-                    if (chats_preloader!=null){
-                        chats_preloader.setVisibility(View.GONE);
-                    }
-                    Chat newchat = null;
-
                     if (needKey==true){
                         if (oldChats.length>0){
                             for (int i=0;i<Chats.length;i++) {
@@ -610,10 +593,35 @@ public class loggedWindow extends AppCompatActivity {
                                 String generatedString = customEncryptorAES.getRandomKey();
                                 getSharedPreferences(Chats[0].ChatId, MODE_PRIVATE).edit().putString("password",generatedString).commit();
                             }
-                            }
+                        }
 
 
                     }
+                    for (int i = 0; i<e.length();i++){
+                        JSONObject chatObject = new JSONObject(e.getString(i));
+                        Chat newChat = new Chat(chatObject.getString("chat_name"), chatObject.getString("chat_id"), getSharedPreferences(chatObject.getString("chat_id"), MODE_PRIVATE).getString("messages",""));
+                        final View view = getLayoutInflater().inflate(R.layout.chat_template, null);
+                        RelativeLayout newChatLayout = view.findViewById(R.id.chatTemplate);
+                        TextView newChatName = view.findViewById(R.id.chatTemplate_name);
+                        newChatName.setText(chatObject.getString("chat_name"));
+                        TextView newChatId = view.findViewById(R.id.chatTemplate_id);
+                        newChatId.setText(chatObject.getString("chat_id"));
+
+                        newChatLayout.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                newChat.Open(getApplicationContext(), loggedWindow.this);
+                            }
+                        });
+                        chatsPanel.addView(view);
+                    }
+
+                    if (chats_preloader!=null){
+                        chats_preloader.setVisibility(View.GONE);
+                    }
+
+
+
                         }else{
                         reUpdateChats();
                     }
@@ -628,7 +636,7 @@ public class loggedWindow extends AppCompatActivity {
                 }
 
             } catch (JSONException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }
