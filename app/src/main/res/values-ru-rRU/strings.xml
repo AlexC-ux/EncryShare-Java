@@ -29,4 +29,8 @@
     <string name="dark">Тёмная</string>
     <string name="light">Светлая</string>
     <string name="systemtheme">Наследовать системную</string>
+    <string name="author">Автор</string>
+    <string name="author_name">Герасимов Александр Андреевич</string>
+    <string name="siomaname">Данилов Семён Алексеевич</string>
+    <string name="thanks_to">Отдельной благодарности заслуживает:</string>
 </resources>

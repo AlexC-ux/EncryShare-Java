@@ -287,7 +287,7 @@ public class chatWindow extends AppCompatActivity {
                     try {
                         //получение мемберов
                         new GetMembers(chatWindow.this).execute(chatWindow.this.getString(R.string.apiUrl) + "getChatInfo.php?api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", "") + "&chat_id=" + Chat.activeChat.ChatId);
-
+                        msgService.pause = 0;
                         //создание строки сообщения
                         Calendar c = Calendar.getInstance();
                         String message = Uri.encode("("+c.get(Calendar.HOUR_OF_DAY)+":"+c.get(Calendar.MINUTE)  +") "+messageText.getText().toString().trim());

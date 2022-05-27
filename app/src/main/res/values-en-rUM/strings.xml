@@ -29,4 +29,8 @@
     <string name="dark">Dark</string>
     <string name="light">Light</string>
     <string name="systemtheme">Follow system</string>
+    <string name="author">Author</string>
+    <string name="author_name">Gerasimov Aleksandr Andreevich</string>
+    <string name="siomaname">Semyon Alekseevich Danilov</string>
+    <string name="thanks_to">Special thanks are due:</string>
 </resources>

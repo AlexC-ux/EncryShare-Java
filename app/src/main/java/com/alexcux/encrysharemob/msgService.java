@@ -14,10 +14,10 @@ import android.util.Log;
 import androidx.core.app.NotificationCompat;
 
 public class msgService extends IntentService {
-    public static int pause;
+    public static int pause = 500;
     public static int activePause = 500;
-    public static int passivePause = 4500;
-    public static int noResponseToPassive = 30;
+    public static int passivePause = 6000;
+    public static int noResponseToPassive = 100;
     public static int noResponseCounter = 0;
     final String LOG_TAG = "myLogs";
     public msgService() {
@@ -72,15 +72,15 @@ public class msgService extends IntentService {
                 while (true) {
 
                     new chatWindow.GetMessages(loggedWindow.lw).execute(getString(R.string.apiUrl) + "rData.php?api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", ""));
-                    if (noResponseCounter==noResponseToPassive){
-                        pause = passivePause;
-                    }
-                    if (noResponseCounter<noResponseToPassive){
-                        pause = activePause;
-                    }
                     synchronized(this) {
                         try {
                             wait(pause);
+                            if (noResponseCounter==noResponseToPassive){
+                                pause = passivePause;
+                            }
+                            if (noResponseCounter<noResponseToPassive){
+                                pause = activePause;
+                            }
                         } catch(InterruptedException ie){}
                     }
                 }

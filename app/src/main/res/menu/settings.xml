@@ -4,11 +4,13 @@
     <group android:id="@+id/menugroup1" >
         <item
             android:id="@+id/sharepopup"
-            android:icon="@mipmap/ic_launcher"
             android:title="@string/share"/>
         <item
             android:id="@+id/themepopup"
             android:title="@string/theme"/>
+        <item
+            android:id="@+id/authorpopup"
+            android:title="@string/author"/>
         <item
             android:id="@+id/langpopup"
             android:title="@string/language"/>

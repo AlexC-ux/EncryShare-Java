@@ -3,6 +3,8 @@ package com.alexcux.encrysharemob;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -165,6 +167,9 @@ public class offline_mode extends AppCompatActivity {
                                         });
                                         THEMEpopupMenu.show();
                                         return true;
+                                    case R.id.authorpopup:
+                                        startActivity(new Intent(getApplicationContext(),author.class));
+                                        return true;
                                     default:
                                         return true;
                                 }
@@ -177,6 +182,16 @@ public class offline_mode extends AppCompatActivity {
 
         nameTextView = findViewById(R.id.username);
         idTextView = findViewById(R.id.userid);
+        idTextView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                ClipData clipData = ClipData.newPlainText("text", getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                clipboardManager.setPrimaryClip(clipData);
+                Toast.makeText(getApplicationContext(),"ID скопирован!",Toast.LENGTH_SHORT).show();
+            }
+
+        });
 
         if (!getSharedPreferences("main", MODE_PRIVATE).getString("username", "").trim().equals("") && !getSharedPreferences("main", MODE_PRIVATE).getString("userid", "").trim().equals("")) {
             nameTextView.setText(getSharedPreferences("main", MODE_PRIVATE).getString("username", ""));

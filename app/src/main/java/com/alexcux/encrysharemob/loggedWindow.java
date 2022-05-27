@@ -101,6 +101,7 @@ public class loggedWindow extends AppCompatActivity {
 
     @Override
     protected void onDestroy(){
+        msgService.noResponseCounter = msgService.noResponseToPassive-2;
         chatsThread.interrupt();
         super.onDestroy();
     }
@@ -133,6 +134,23 @@ public class loggedWindow extends AppCompatActivity {
         };
         new Thread(chatsThUpdater).start();
     }
+
+    private void startRefreshAnim(){
+        RotateAnimation ra = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        ra.setDuration(1500);
+        ra.setInterpolator(new LinearInterpolator());
+        ra.setRepeatCount(9999);
+        refreshBtn.startAnimation(ra);
+    }
+
+    private void stopRefreshAnim(){
+        RotateAnimation ra = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        ra.setDuration(0);
+        ra.setInterpolator(new LinearInterpolator());
+        ra.setRepeatCount(0);
+        refreshBtn.startAnimation(ra);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         String languageToLoad  = getSharedPreferences("lang", MODE_PRIVATE).getString("value",""); // your language
@@ -243,6 +261,9 @@ public class loggedWindow extends AppCompatActivity {
                                             }
                                         });
                                         THEMEpopupMenu.show();
+                                        return true;
+                                    case R.id.authorpopup:
+                                        startActivity(new Intent(getApplicationContext(),author.class));
                                         return true;
                                     default:
                                         return true;
@@ -381,11 +402,7 @@ public class loggedWindow extends AppCompatActivity {
     private static boolean firstChatsUpd = false;
     private void startGettingChats(){
         if (! firstChatsUpd){
-            RotateAnimation ra = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
-            ra.setDuration(1500);
-            ra.setInterpolator(new LinearInterpolator());
-            ra.setRepeatCount(9999);
-            refreshBtn.startAnimation(ra);
+            startRefreshAnim();
         }
         Runnable runnable = new Runnable() {
             @Override
@@ -524,6 +541,7 @@ public class loggedWindow extends AppCompatActivity {
     public static boolean offlineMode = false;
     private class GetUserChats extends AsyncTask<String, String, String> {
 
+
         HttpURLConnection connection = null;
         BufferedReader reader = null;
 
@@ -533,12 +551,9 @@ public class loggedWindow extends AppCompatActivity {
                 //Обработка запроса
                 URL url = new URL(strings[0]);
                 connection = (HttpURLConnection) url.openConnection();
-                if (!offlineMode){
-                    connection.connect();
-                    offlineMode = false;
-                }else{
-                    StartOfflineMode();
-                }
+                connection.connect();
+
+
 
                 InputStream stream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(stream));
@@ -551,8 +566,13 @@ public class loggedWindow extends AppCompatActivity {
                     stringBuffer.append(line).append("\n");
                 return stringBuffer.toString();
             } catch (IOException e) {
-                if (!offlineMode){
+                if (offlineMode){
+                    offlineMode = false;
+                }else{
                     offlineMode = true;
+                    if (!isOffline){
+                        StartOfflineMode();
+                    }
                 }
             } finally {
                 if (connection != null)
@@ -562,7 +582,7 @@ public class loggedWindow extends AppCompatActivity {
                         reader.close();
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    stopRefreshAnim();
                 }
             }
 
@@ -639,14 +659,10 @@ public class loggedWindow extends AppCompatActivity {
                         }
                 if (!firstChatsUpd) {
                     firstChatsUpd = true;
-                    refreshBtn.startAnimation(new Animation() {
-                        @Override
-                        protected Animation clone() throws CloneNotSupportedException {
-                            return super.clone();
-                        }
-                    });
+                    stopRefreshAnim();
                 }
 
+                stopRefreshAnim();
             } catch (JSONException e) {
                 e.printStackTrace();
             }

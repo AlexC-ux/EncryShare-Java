@@ -17,13 +17,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="m">
         <activity
+            android:name=".author"
+            android:exported="false" />
+        <activity
             android:name=".offline_mode"
             android:exported="false" />
 
         <service
             android:name=".msgService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity
             android:name=".chatWindow"

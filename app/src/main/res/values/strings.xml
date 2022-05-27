@@ -42,4 +42,15 @@
     <string name="light">Светлая</string>
     <string name="systemtheme">Системная</string>
     <string name="english" translatable="false">English</string>
+    <string name="author">Автор</string>
+    <string name="vk" translatable="false">VKontakte</string>
+    <string name="github" translatable="false">Github</string>
+    <string name="author_name">Герасимов Александр Андреевич</string>
+    <string name="author_vk" translatable="false">https://vk.com/id361675873</string>
+    <string name="author_github" translatable="false">https://github.com/AlexC-ux</string>
+    <string name="siomaname">Данилов Семён Алексеевич</string>
+    <string name="thanks_to">Отдельной благодарности заслуживает:</string>
+    <string name="vlads23" translatable="false">VladS23</string>
+    <string name="rimuru" translatable="false">Rimuru</string>
+    <string name="sycho" translatable="false">Sycho</string>
 </resources>
