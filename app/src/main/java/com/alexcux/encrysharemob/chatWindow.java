@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -252,6 +253,11 @@ public class chatWindow extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Нажмите на кнопку выхода из чата ещё раз, чтобы выйти.", Toast.LENGTH_SHORT).show();
                         break;
                     case 3:
+                        File cdata = new File("/data/data/"+ getPackageName()+ "/shared_prefs/"+Chat.activeChat.ChatId+".xml");
+                        cdata.delete();
+                        if (loggedWindow.offlineMode){
+                            offline_mode.activeOfflineActivity.AddChatsTOList();
+                        }
                         new MakeReq().execute(chatWindow.this.getString(R.string.apiUrl) + "addMember.php?api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", "") + "&remove&chat_id=" + Chat.activeChat.ChatId + "&member_id=" + getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
                         exitAccep = 0;
                         chatWindow.this.finish();
@@ -276,7 +282,6 @@ public class chatWindow extends AppCompatActivity {
         sendMsgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
 
                 if (!messageText.getText().toString().trim().equals("")){
                     try {
@@ -554,6 +559,7 @@ public class chatWindow extends AppCompatActivity {
                         JSONObject jb = new JSONObject(jsonObject.getString("data"));
                         String password = Uri.decode(jb.getString("password"));
                         ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().putString("password",password).commit();
+                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().putString("chat_name",jb.getString("chat_name")).commit();
                     }
                 }
             }
@@ -694,8 +700,9 @@ public class chatWindow extends AppCompatActivity {
                 //Обработка запроса
                 URL url = new URL(strings[0]);
                 connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
-
+                if (!loggedWindow.offlineMode){
+                    connection.connect();
+                }
                 InputStream stream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(stream));
 
@@ -731,12 +738,14 @@ public class chatWindow extends AppCompatActivity {
 
 
             try {
-                JSONObject chatInfo = new JSONObject(result);
-                String owner = chatInfo.getString("chat_owner");
-                String uid = getSharedPreferences("main", MODE_PRIVATE).getString("userid", "");
-                if (!owner.equals(uid)){
-                    addMemberBtn.setVisibility(View.INVISIBLE);
-                    removeMemberBtn.setVisibility(View.GONE);
+                if (result!=null){
+                    JSONObject chatInfo = new JSONObject(result);
+                    String owner = chatInfo.getString("chat_owner");
+                    String uid = getSharedPreferences("main", MODE_PRIVATE).getString("userid", "");
+                    if (!owner.equals(uid)){
+                        addMemberBtn.setVisibility(View.INVISIBLE);
+                        removeMemberBtn.setVisibility(View.GONE);
+                    }
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

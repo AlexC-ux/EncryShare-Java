@@ -326,7 +326,6 @@ public class loggedWindow extends AppCompatActivity {
         } else {
             String url = loggedWindow.this.getString(R.string.apiUrl) + "reg.php?act=login&api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", "");
             new GetUserData().execute(url);
-
         }
         startGettingChats();
         startGettingMessages();
@@ -450,7 +449,7 @@ public class loggedWindow extends AppCompatActivity {
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    private class GetUserData extends AsyncTask<String, String, String> {
+    public class GetUserData extends AsyncTask<String, String, String> {
 
         HttpURLConnection connection = null;
         BufferedReader reader = null;
@@ -498,7 +497,6 @@ public class loggedWindow extends AppCompatActivity {
             super.onPostExecute(result);
 
             try {
-                //todo проверка на изменение чатов
                 JSONObject jsonObject = new JSONObject(result);
                 String name = jsonObject.getString("name");
                 String id = jsonObject.getString("id");
@@ -511,7 +509,19 @@ public class loggedWindow extends AppCompatActivity {
             }
         }
     }
+    public static boolean isOffline = false;
+    private void StartOfflineMode(){
+        if (!isOffline){
+            isOffline = true;
+            stopService(msgServiceObj);
+            chatsThread.interrupt();
+            Intent offlineIntent = new Intent(getBaseContext(),offline_mode.class);
+            startActivity(offlineIntent);
+            finish();
+        }
 
+    }
+    public static boolean offlineMode = false;
     private class GetUserChats extends AsyncTask<String, String, String> {
 
         HttpURLConnection connection = null;
@@ -523,7 +533,12 @@ public class loggedWindow extends AppCompatActivity {
                 //Обработка запроса
                 URL url = new URL(strings[0]);
                 connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
+                if (!offlineMode){
+                    connection.connect();
+                    offlineMode = false;
+                }else{
+                    StartOfflineMode();
+                }
 
                 InputStream stream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(stream));
@@ -536,8 +551,9 @@ public class loggedWindow extends AppCompatActivity {
                     stringBuffer.append(line).append("\n");
                 return stringBuffer.toString();
             } catch (IOException e) {
-                reUpdateChats();
-                e.printStackTrace();
+                if (!offlineMode){
+                    offlineMode = true;
+                }
             } finally {
                 if (connection != null)
                     connection.disconnect();
@@ -580,6 +596,7 @@ public class loggedWindow extends AppCompatActivity {
                                 if (linearSearch(oldChats, Chats[i]) < 0) {
                                     needKey = false;
                                     newchat = Chats[i];
+                                    getSharedPreferences(newchat.ChatId, MODE_PRIVATE).edit().putString("chat_name", newchat.ChatName).commit();
                                     //todo закрепление пароля за чатом
                                     String generatedString = customEncryptorAES.getRandomKey();
                                     getSharedPreferences(newchat.ChatId, MODE_PRIVATE).edit().putString("password", generatedString).commit();
@@ -619,12 +636,7 @@ public class loggedWindow extends AppCompatActivity {
                     if (chats_preloader!=null){
                         chats_preloader.setVisibility(View.GONE);
                     }
-
-
-
-                        }else{
-                        reUpdateChats();
-                    }
+                        }
                 if (!firstChatsUpd) {
                     firstChatsUpd = true;
                     refreshBtn.startAnimation(new Animation() {
@@ -714,7 +726,7 @@ public class loggedWindow extends AppCompatActivity {
                     stringBuffer.append(line).append("\n");
                 return stringBuffer.toString();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             } finally {
                 if (connection != null)
                     connection.disconnect();
@@ -735,7 +747,7 @@ public class loggedWindow extends AppCompatActivity {
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
 
-            if (!result.equals(null)){
+            if (result!=null){
                 String appversion = BuildConfig.VERSION_NAME;
                 if (!result.contains(appversion)){
                     String nid = "0";

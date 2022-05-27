@@ -20,10 +20,12 @@
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/lang_menu.xml" value="0.2595" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/menubtnbg.xml" value="0.1" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/refresh.xml" value="0.1" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/refresh_ofline.xml" value="0.1075" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/drawable/settings.xml" value="0.1205" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_chat_window.xml" value="0.2" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_logged_window.xml" value="0.1649122807017544" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_main.xml" value="0.2" />
+        <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/activity_offline_mode.xml" value="0.10196406184705391" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/bg_white_outline.xml" value="0.16636446056210336" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chat_message_template.xml" value="0.2" />
         <entry key="..\:/Users/eunv2/AndroidStudioProjects/encrysharemob/app/src/main/res/layout/chat_template.xml" value="0.2128205128205128" />

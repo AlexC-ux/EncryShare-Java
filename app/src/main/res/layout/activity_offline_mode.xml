@@ -81,37 +81,6 @@
                     android:text="@string/pressidtocopy"
                     android:textAlignment="center"
                     android:textSize="9pt" />
-
-
-
-                <Button
-                    android:id="@+id/newChat"
-                    android:layout_width="match_parent"
-                    android:layout_height="70sp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginHorizontal="10sp"
-                    android:layout_marginBottom="90sp"
-                    android:background="@drawable/chatbg"
-                    android:outlineProvider="background"
-                    android:text="@string/createchat"
-                    android:textColor="@color/text"
-                    android:textSize="20dp" />
-
-                <EditText
-                    android:id="@+id/newChatName"
-                    android:layout_width="match_parent"
-                    android:layout_height="60sp"
-                    android:layout_alignParentBottom="true"
-                    android:layout_marginHorizontal="10sp"
-                    android:layout_marginBottom="30sp"
-                    android:backgroundTint="@color/white"
-                    android:hint="@string/enterchatname"
-                    android:textColor="@color/text"
-                    android:textColorHint="@color/text"
-                    android:textColorLink="@color/grey1"
-                    android:visibility="gone" />
-
-
             </RelativeLayout>
 
             <ScrollView
@@ -132,14 +101,7 @@
                     android:paddingTop="60sp"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/chats_preloader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="5sp"
-                        android:text="@string/chats_loading"
-                        android:textColor="@color/text"
-                        android:textSize="28sp" />
+
                 </LinearLayout>
 
             </ScrollView>
@@ -195,6 +157,7 @@
             android:foregroundGravity="center"
             android:rotation="90"
             android:visibility="visible" />
+
         <ImageButton
             android:id="@+id/refreshBtn"
             android:layout_width="40sp"
@@ -206,7 +169,7 @@
             android:layout_marginTop="5sp"
             android:layout_marginEnd="45sp"
             android:layout_marginBottom="5sp"
-            android:background="@drawable/refresh"
+            android:background="@drawable/refresh_ofline"
             android:contentDescription="@string/app_name"
             android:foregroundGravity="center"
             android:rotation="90"

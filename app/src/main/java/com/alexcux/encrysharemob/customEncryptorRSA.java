@@ -97,7 +97,9 @@ public class customEncryptorRSA {
                 //Обработка запроса
                 URL url = new URL(strings[0]);
                 connection = (HttpURLConnection) url.openConnection();
-                connection.connect();
+                if (!loggedWindow.isOffline){
+                    connection.connect();
+                }
 
                 InputStream stream = connection.getInputStream();
                 reader = new BufferedReader(new InputStreamReader(stream));
@@ -130,12 +132,13 @@ public class customEncryptorRSA {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            JSONObject jo = null;
             try {
-                jo = new JSONObject(result);
-                String k = jo.getString("pubkey");
-                customEncryptorRSA.publicKey = k.replace("-----BEGIN PUBLIC KEY-----\r\n", "").replace("\r\n-----END PUBLIC KEY-----", "");
-                customEncryptorRSA.publicKey = customEncryptorRSA.publicKey.replace("\\r\\n", "\n");
+                if (result!=null){
+                    JSONObject jo = new JSONObject(result);
+                    String k = jo.getString("pubkey");
+                    customEncryptorRSA.publicKey = k.replace("-----BEGIN PUBLIC KEY-----\r\n", "").replace("\r\n-----END PUBLIC KEY-----", "");
+                    customEncryptorRSA.publicKey = customEncryptorRSA.publicKey.replace("\\r\\n", "\n");
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
