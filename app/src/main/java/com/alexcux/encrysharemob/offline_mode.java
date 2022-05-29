@@ -204,9 +204,10 @@ public class offline_mode extends AppCompatActivity {
         refreshBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setContentView(R.layout.activity_logged_window);
                 Intent onlineMode = new Intent(getApplicationContext(), loggedWindow.class);
-                startActivity(onlineMode);
                 finish();
+                startActivity(onlineMode);
             }
         });
 
@@ -223,25 +224,27 @@ public class offline_mode extends AppCompatActivity {
                 chatsPanel.removeAllViews();
                 for (File file : listFiles) {
                     try {
-                        int chat_id = Integer.parseInt(file.getName().split("\\.")[0]);
+                        String chat_id = file.getName().split("\\.")[0];
                         JSONObject chatObject = new JSONObject();
                         chatObject.put("chat_id",chat_id);
-                        chatObject.put("chat_name",getSharedPreferences(chatObject.getString("chat_id"), MODE_PRIVATE).getString("chat_name",""));
+                        chatObject.put("chat_name",getSharedPreferences(chat_id, MODE_PRIVATE).getString("chat_name","Сhat name unavailable"));
                         Chat newChat = new Chat(chatObject.getString("chat_name"), chatObject.getString("chat_id"), getSharedPreferences(chatObject.getString("chat_id"), MODE_PRIVATE).getString("messages",""));
-                        final View view = getLayoutInflater().inflate(R.layout.chat_template, null);
-                        RelativeLayout newChatLayout = view.findViewById(R.id.chatTemplate);
-                        TextView newChatName = view.findViewById(R.id.chatTemplate_name);
-                        newChatName.setText(chatObject.getString("chat_name"));
-                        TextView newChatId = view.findViewById(R.id.chatTemplate_id);
-                        newChatId.setText(chatObject.getString("chat_id"));
+                        if (Integer.parseInt(chat_id)>0){
+                            final View view = getLayoutInflater().inflate(R.layout.chat_template, null);
+                            RelativeLayout newChatLayout = view.findViewById(R.id.chatTemplate);
+                            TextView newChatName = view.findViewById(R.id.chatTemplate_name);
+                            newChatName.setText(chatObject.getString("chat_name"));
+                            TextView newChatId = view.findViewById(R.id.chatTemplate_id);
+                            newChatId.setText(chatObject.getString("chat_id"));
 
-                        newChatLayout.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                newChat.Open(getApplicationContext(), loggedWindow.lw);
-                            }
-                        });
-                        chatsPanel.addView(view);
+                            newChatLayout.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    newChat.Open(getApplicationContext(), loggedWindow.lw);
+                                }
+                            });
+                            chatsPanel.addView(view);
+                        }
                     }catch (Exception e){
 
                     }

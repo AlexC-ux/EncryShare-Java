@@ -74,13 +74,21 @@
                     android:textSize="10pt" />
 
                 <TextView
-                    android:textColor="@color/text"
                     android:layout_width="match_parent"
                     android:layout_height="40sp"
                     android:layout_marginTop="185sp"
                     android:text="@string/pressidtocopy"
                     android:textAlignment="center"
+                    android:textColor="@color/text"
                     android:textSize="9pt" />
+
+                <ImageView
+                    android:id="@+id/qrcode"
+                    android:layout_width="130sp"
+                    android:layout_height="130sp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="240sp"
+                    android:background="@color/white" />
 
 
 

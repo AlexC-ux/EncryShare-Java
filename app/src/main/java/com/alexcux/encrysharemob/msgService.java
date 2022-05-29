@@ -74,13 +74,13 @@ public class msgService extends IntentService {
                     new chatWindow.GetMessages(loggedWindow.lw).execute(getString(R.string.apiUrl) + "rData.php?api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", ""));
                     synchronized(this) {
                         try {
-                            wait(pause);
                             if (noResponseCounter==noResponseToPassive){
                                 pause = passivePause;
                             }
                             if (noResponseCounter<noResponseToPassive){
                                 pause = activePause;
                             }
+                            wait(pause);
                         } catch(InterruptedException ie){}
                     }
                 }

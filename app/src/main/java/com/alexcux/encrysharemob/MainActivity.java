@@ -211,14 +211,16 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(result);
 
             try {
-                JSONObject jsonObject = new JSONObject(result);
-                String apiKey = jsonObject.getString("api_key");
-                getSharedPreferences("main", MODE_PRIVATE).edit().putString("api_key",apiKey).commit();
-                Intent intent = new Intent(getApplicationContext(), loggedWindow.class);
-                startActivity(intent);
-                finish();
-                //Получение API KEY!!
-                //getSharedPreferences("main", MODE_PRIVATE).getString("api_key","")
+                if (result!=null) {
+                    JSONObject jsonObject = new JSONObject(result);
+                    String apiKey = jsonObject.getString("api_key");
+                    getSharedPreferences("main", MODE_PRIVATE).edit().putString("api_key", apiKey).commit();
+                    Intent intent = new Intent(getApplicationContext(), loggedWindow.class);
+                    startActivity(intent);
+                    finish();
+                    //Получение API KEY!!
+                    //getSharedPreferences("main", MODE_PRIVATE).getString("api_key","")
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

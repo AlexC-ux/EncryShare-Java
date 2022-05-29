@@ -8,13 +8,17 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -24,6 +28,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -40,13 +45,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -84,7 +92,6 @@ public class loggedWindow extends AppCompatActivity {
 
     @Override
     protected void onPause(){
-        msgService.pause = msgService.passivePause;
         super.onPause();
     }
 
@@ -92,7 +99,7 @@ public class loggedWindow extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        msgService.pause = msgService.activePause;
+        msgService.noResponseCounter = 0;
         if (chatsThread!=null){
             if (chatsThread.getState() == Thread.State.TERMINATED)
             chatsThread.start();
@@ -101,7 +108,7 @@ public class loggedWindow extends AppCompatActivity {
 
     @Override
     protected void onDestroy(){
-        msgService.noResponseCounter = msgService.noResponseToPassive-2;
+        msgService.noResponseCounter = msgService.noResponseToPassive-1;
         chatsThread.interrupt();
         super.onDestroy();
     }
@@ -177,9 +184,11 @@ public class loggedWindow extends AppCompatActivity {
         }
         setContentView(R.layout.activity_logged_window);
         refreshBtn = findViewById(R.id.refreshBtn);
+        startRefreshAnim();
         refreshBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startRefreshAnim();
                 stopService(msgServiceObj);
                 startService(msgServiceObj);
                 reUpdateChats();
@@ -344,6 +353,8 @@ public class loggedWindow extends AppCompatActivity {
         if (!getSharedPreferences("main", MODE_PRIVATE).getString("username", "").trim().equals("") && !getSharedPreferences("main", MODE_PRIVATE).getString("userid", "").trim().equals("")) {
             nameTextView.setText(getSharedPreferences("main", MODE_PRIVATE).getString("username", ""));
             idTextView.setText("#" + getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
+            getIDBitmap("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
+            updateQrCode(findViewById(R.id.qrcode));
         } else {
             String url = loggedWindow.this.getString(R.string.apiUrl) + "reg.php?act=login&api_key=" + getSharedPreferences("main", MODE_PRIVATE).getString("api_key", "");
             new GetUserData().execute(url);
@@ -401,9 +412,6 @@ public class loggedWindow extends AppCompatActivity {
 
     private static boolean firstChatsUpd = false;
     private void startGettingChats(){
-        if (! firstChatsUpd){
-            startRefreshAnim();
-        }
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -412,7 +420,7 @@ public class loggedWindow extends AppCompatActivity {
                     new GetUserChats().execute(loggedWindow.this.getString(R.string.apiUrl)+"getChats.php?api_key="+getSharedPreferences("main", MODE_PRIVATE).getString("api_key", ""));
                     synchronized(this) {
                         try {
-                            wait(1000);
+                            wait(1500);
                         } catch(InterruptedException ie){}
                     }
                 }
@@ -521,6 +529,8 @@ public class loggedWindow extends AppCompatActivity {
                 getSharedPreferences("main", MODE_PRIVATE).edit().putString("userid", id).commit();
                 nameTextView.setText(getSharedPreferences("main", MODE_PRIVATE).getString("username", ""));
                 idTextView.setText("#" + getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
+                getIDBitmap("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
+                updateQrCode(findViewById(R.id.qrcode));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -530,8 +540,12 @@ public class loggedWindow extends AppCompatActivity {
     private void StartOfflineMode(){
         if (!isOffline){
             isOffline = true;
-            stopService(msgServiceObj);
-            chatsThread.interrupt();
+            if (msgServiceObj!=null){
+                stopService(msgServiceObj);
+            }
+            if (chatsThread!=null){
+                chatsThread.interrupt();
+            }
             Intent offlineIntent = new Intent(getBaseContext(),offline_mode.class);
             startActivity(offlineIntent);
             finish();
@@ -614,12 +628,12 @@ public class loggedWindow extends AppCompatActivity {
                         if (oldChats.length>0){
                             for (int i=0;i<Chats.length;i++) {
                                 if (linearSearch(oldChats, Chats[i]) < 0) {
-                                    needKey = false;
                                     newchat = Chats[i];
                                     getSharedPreferences(newchat.ChatId, MODE_PRIVATE).edit().putString("chat_name", newchat.ChatName).commit();
                                     //todo закрепление пароля за чатом
                                     String generatedString = customEncryptorAES.getRandomKey();
                                     getSharedPreferences(newchat.ChatId, MODE_PRIVATE).edit().putString("password", generatedString).commit();
+                                    needKey = false;
                                     break;
                                 }
                             }
@@ -657,10 +671,6 @@ public class loggedWindow extends AppCompatActivity {
                         chats_preloader.setVisibility(View.GONE);
                     }
                         }
-                if (!firstChatsUpd) {
-                    firstChatsUpd = true;
-                    stopRefreshAnim();
-                }
 
                 stopRefreshAnim();
             } catch (JSONException e) {
@@ -713,8 +723,6 @@ public class loggedWindow extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-
-            //new GetUserChats().execute(loggedWindow.this.getString(R.string.apiUrl)+"getChats.php?api_key="+getSharedPreferences("main", MODE_PRIVATE).getString("api_key", ""));
         }
     }
 
@@ -806,5 +814,59 @@ public class loggedWindow extends AppCompatActivity {
         }
     }
 
+    private void getIDBitmap(String url) {
+        final Bitmap[] qrBitmap = {null};
+        Runnable getbitmap = new Runnable() {
+            private void getByUrl() {
+
+                try {
+                    URL aURL = new URL(url);
+                    URLConnection conn = aURL.openConnection();
+                    conn.connect();
+                    InputStream is = conn.getInputStream();
+                    BufferedInputStream bis = new BufferedInputStream(is);
+                    qrBitmap[0] = BitmapFactory.decodeStream(bis);
+                    bis.close();
+                    is.close();
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    qrBitmap[0].compress(Bitmap.CompressFormat.PNG, 100, baos); //bm is the bitmap object
+                    byte[] b = baos.toByteArray();
+                    String encoded = Base64.encodeToString(b, Base64.DEFAULT);
+                    getSharedPreferences("main", MODE_PRIVATE).edit().putString("qrcode", encoded).commit();
+
+                } catch (IOException e) {
+                    StartOfflineMode();
+                }
+            }
+            @Override
+            public void run() {
+                getByUrl();
+            }
+        };
+
+        new Thread(getbitmap).start();
+    }
+
+    private void updateQrCode(ImageView qr){
+        Runnable qrUpdater = new Runnable() {
+            @Override
+            public void run() {
+                String image64 = getSharedPreferences("main", MODE_PRIVATE).getString("bitmap","");
+                while (image64.equals("")){
+                    synchronized (this){
+                        try {
+                            wait(1200);
+                            image64 = getSharedPreferences("main", MODE_PRIVATE).getString("qrcode","");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                byte[] imageAsBytes = Base64.decode(image64.getBytes(), Base64.DEFAULT);
+                qr.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+            }
+        };
+        runOnUiThread(qrUpdater);
+    }
 }
 

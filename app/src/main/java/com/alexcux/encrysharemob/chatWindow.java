@@ -96,9 +96,6 @@ public class chatWindow extends AppCompatActivity {
         String cname = cn.split("#")[0];
         String cid = cn.split("#")[1];
         Chat.activeChat = new Chat(cname,cid,getSharedPreferences(cid, MODE_PRIVATE).getString("messages",""));
-        String ns = getApplicationContext().NOTIFICATION_SERVICE;
-        NotificationManager nMgr = (NotificationManager) getApplicationContext().getSystemService(ns);
-        nMgr.cancel(Integer.parseInt(Chat.activeChat.ChatId));
     }
 
     @Override
@@ -369,7 +366,7 @@ public class chatWindow extends AppCompatActivity {
                                         return true;
                                     case R.id.replychatbtn:
                                         messageText.requestFocus();
-                                        messageText.setText("|vvvvvvvvvvvvvvvvvvvvv|\n"+msgText+"\n|vvvvvvvvvvvvvvvvvvvvv|"+"\n\n");
+                                        messageText.setText("\n\n|vvvvvvvvvvvvvvvvvvvvv|\n"+msgText+"\n|vvvvvvvvvvvvvvvvvvvvv|");
                                         messageText.requestFocus();
                                         return true;
                                     default:
@@ -559,7 +556,6 @@ public class chatWindow extends AppCompatActivity {
                         JSONObject jb = new JSONObject(jsonObject.getString("data"));
                         String password = Uri.decode(jb.getString("password"));
                         ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().putString("password",password).commit();
-                        ap.getSharedPreferences(jb.getString("chat_id"), MODE_PRIVATE).edit().putString("chat_name",jb.getString("chat_name")).commit();
                     }
                 }
             }
