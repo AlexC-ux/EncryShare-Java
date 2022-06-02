@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatDelegate;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -77,6 +80,7 @@ public class offline_mode extends AppCompatActivity {
                 break;
         }
         setContentView(R.layout.activity_offline_mode);
+        updateQrCode(findViewById(R.id.qrcode));
         chatsPanel = findViewById(R.id.allChatsPanel);
         menuPanel = findViewById(R.id.leftMenuPanel);
         menuBtn = findViewById(R.id.menuBtn);
@@ -253,5 +257,32 @@ public class offline_mode extends AppCompatActivity {
         };
 
         runOnUiThread(adding);
+    }
+
+    private void updateQrCode(ImageView qr){
+        Runnable qrUpdater = new Runnable() {
+            @Override
+            public void run() {
+                String image64 = getSharedPreferences("main", MODE_PRIVATE).getString("bitmap","");
+                while (image64.equals("")){
+                    synchronized (this){
+                        try {
+                            wait(1200);
+                            image64 = getSharedPreferences("main", MODE_PRIVATE).getString("qrcode","");
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                byte[] imageAsBytes = Base64.decode(image64.getBytes(), Base64.DEFAULT);
+                if (imageAsBytes.length>0){
+                    qr.setVisibility(View.VISIBLE);
+                    qr.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+                }else{
+                    qr.setVisibility(View.GONE);
+                }
+            }
+        };
+        runOnUiThread(qrUpdater);
     }
 }

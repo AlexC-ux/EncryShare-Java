@@ -1,23 +1,32 @@
 package com.alexcux.encrysharemob;
 
+import static android.provider.Settings.AUTHORITY;
+
 import android.app.ActivityManager;
+import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.appsearch.StorageInfo;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Looper;
+import android.os.storage.StorageManager;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +49,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.TaskStackBuilder;
+import androidx.core.content.FileProvider;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -48,16 +58,24 @@ import org.json.JSONObject;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileAttribute;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.jar.Attributes;
 
 public class loggedWindow extends AppCompatActivity {
 
@@ -160,6 +178,7 @@ public class loggedWindow extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        msgService.noResponseCounter = 0;
         String languageToLoad  = getSharedPreferences("lang", MODE_PRIVATE).getString("value",""); // your language
         Locale myLocale = new Locale(languageToLoad);
         Locale.setDefault(myLocale);
@@ -392,7 +411,6 @@ public class loggedWindow extends AppCompatActivity {
 
 
     private void startGettingMessages() {
-        //TODO получение сообщени
         if (!isMyServiceRunning(msgService.class)){
             msgServiceObj = new Intent(this, msgService.class);
             msgServiceObj.putExtras(this.getIntent());
@@ -529,7 +547,9 @@ public class loggedWindow extends AppCompatActivity {
                 getSharedPreferences("main", MODE_PRIVATE).edit().putString("userid", id).commit();
                 nameTextView.setText(getSharedPreferences("main", MODE_PRIVATE).getString("username", ""));
                 idTextView.setText("#" + getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
-                getIDBitmap("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
+                if (getSharedPreferences("main", MODE_PRIVATE).getString("bitmap","").equals("")){
+                    getIDBitmap("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data="+getSharedPreferences("main", MODE_PRIVATE).getString("userid", ""));
+                }
                 updateQrCode(findViewById(R.id.qrcode));
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -630,7 +650,6 @@ public class loggedWindow extends AppCompatActivity {
                                 if (linearSearch(oldChats, Chats[i]) < 0) {
                                     newchat = Chats[i];
                                     getSharedPreferences(newchat.ChatId, MODE_PRIVATE).edit().putString("chat_name", newchat.ChatName).commit();
-                                    //todo закрепление пароля за чатом
                                     String generatedString = customEncryptorAES.getRandomKey();
                                     getSharedPreferences(newchat.ChatId, MODE_PRIVATE).edit().putString("password", generatedString).commit();
                                     needKey = false;
@@ -640,7 +659,6 @@ public class loggedWindow extends AppCompatActivity {
                         }else{
                             if (Chats.length>0){
                                 needKey = false;
-                                //todo закрепление пароля за чатом
                                 String generatedString = customEncryptorAES.getRandomKey();
                                 getSharedPreferences(Chats[0].ChatId, MODE_PRIVATE).edit().putString("password",generatedString).commit();
                             }
@@ -863,7 +881,32 @@ public class loggedWindow extends AppCompatActivity {
                     }
                 }
                 byte[] imageAsBytes = Base64.decode(image64.getBytes(), Base64.DEFAULT);
-                qr.setImageBitmap(BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length));
+                PackageManager m = getPackageManager();
+                String qrimgpath = "data/data/"+ getPackageName()+ "/image/"+"qrid.png";
+                try {
+                    Files.createFile(Paths.get(qrimgpath));
+                    Files.write(Paths.get(qrimgpath), imageAsBytes);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+                if (imageAsBytes.length>0){
+                    qr.setVisibility(View.VISIBLE);
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(imageAsBytes, 0, imageAsBytes.length);
+                    qr.setImageBitmap(bitmap);
+                    String qrpath = qrimgpath;
+                    File qrfile = new File(qrpath);
+                    Uri fileuri = Uri.parse("content://"+qrimgpath);
+                    qr.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //todo нажатие на картинку
+                        }
+                    });
+                }else{
+                    qr.setVisibility(View.GONE);
+                }
             }
         };
         runOnUiThread(qrUpdater);

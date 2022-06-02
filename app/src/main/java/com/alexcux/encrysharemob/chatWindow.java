@@ -300,7 +300,6 @@ public class chatWindow extends AppCompatActivity {
                                 .put("chatId", Chat.activeChat.ChatId)
                                 .put("message", message)
                                 .toString();
-                        //TODO сделать шифрование строки data
                                 //обнуление текста в поле ввода
                                 messageText.setText("");
 
@@ -400,7 +399,6 @@ public class chatWindow extends AppCompatActivity {
 
                 try {
                     JSONObject message = new JSONObject(messages.getString(i));
-                    //TODO добавить время в начале
                     AddNewMessage(message.getString("senderName") + "#" + message.getString("senderId") + ":\n" + message.getString("message"));
                     scrollChatMessages.post(new Runnable() {
 
@@ -512,7 +510,6 @@ public class chatWindow extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            //TODO сделать расшифровку строки result
 
             try {
                 if (result!=null) {
@@ -531,7 +528,6 @@ public class chatWindow extends AppCompatActivity {
                         String key = ap.getSharedPreferences(chatId, MODE_PRIVATE).getString("password","");
                         String vector = chatId + Integer.toString(Integer.parseInt(chatId) * Integer.parseInt(chatId) * 12) + chatId + floppy;
 
-                        //todo расшифровывается в null
                         message = new customEncryptorAES(key, vector).decrypt(Uri.decode(message));
                         message = Uri.decode(message);
                         Chat actChat = null;
